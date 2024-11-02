@@ -1,0 +1,10 @@
+DROP TABLE cash_flow;
+DROP TABLE cash_category;
+DROP TABLE debts;
+DROP TABLE sales;
+DROP TABLE purchases;
+DROP TABLE products;
+DROP TABLE product_categories;
+DROP TABLE clients;
+DROP TYPE transaction_type;
+DROP TYPE payment_method;
