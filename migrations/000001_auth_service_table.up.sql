@@ -23,7 +23,8 @@ CREATE TABLE products
     category_id UUID REFERENCES product_categories (id) NOT NULL,
     name        VARCHAR(50)                             NOT NULL,
     bill_format VARCHAR(5)                              NOT NULL, -- Возможно, лучше использовать ENUM для форматов
-    base_price  DECIMAL(10, 2)                          NOT NULL,
+    incoming_price DECIMAL(10, 2)                          NOT NULL,
+    standard_price  DECIMAL(10, 2)                          NOT NULL,
     total_count INT  DEFAULT 0,
     created_at  DATE DEFAULT now()
 );
@@ -80,4 +81,14 @@ CREATE TABLE cash_flow
     category_id      UUID REFERENCES cash_category (id) NOT NULL,
     description      VARCHAR(255),
     payment_method   payment_method DEFAULT 'uzs'
+);
+
+CREATE TABLE users (
+                       user_id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                       first_name VARCHAR(50) NOT NULL,
+                       last_name VARCHAR(50) NOT NULL,
+                       email VARCHAR(100) UNIQUE NOT NULL,
+                       phone_number VARCHAR(15),
+                       role VARCHAR(20) NOT NULL, -- Consider an ENUM for predefined roles
+                       created_at TIMESTAMP DEFAULT NOW()
 );

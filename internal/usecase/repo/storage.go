@@ -63,31 +63,84 @@ func (p *ProductRepo) GetListProductCategory() (entity.CategoryList, error) {
 func (p *ProductRepo) CreateProduct(in entity.ProductRequest) (entity.Product, error) {
 	var product entity.Product
 	query := `
-		INSERT INTO products (category_id, name, bill_format, base_price, total_count)
-		VALUES ($1, $2, $3, $4, 0)
-		RETURNING id, category_id, name, bill_format, base_price, total_count, created_at
+		INSERT INTO products (category_id, name, bill_format, incoming_price, standard_price, total_count, created_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
+		RETURNING id, category_id, name, bill_format, incoming_price, standard_price, total_count, created_at
 	`
-	err := p.db.QueryRowx(query, in.CategoryID, in.Name, in.BillFormat, in.BasicPrice).
-		Scan(&product.ID, &product.CategoryID, &product.Name, &product.BillFormat, &product.BasicPrice, &product.TotalCount, &product.CreatedAt)
+	err := p.db.QueryRowx(query, in.CategoryID, in.Name, in.BillFormat, in.IncomingPrice, in.StandardPrice, in.TotalCount, in.CreatedAt).
+		Scan(&product.ID, &product.CategoryID, &product.Name, &product.BillFormat, &product.IncomingPrice, &product.StandardPrice, &product.TotalCount, &product.CreatedAt)
 	if err != nil {
 		return entity.Product{}, fmt.Errorf("failed to create product: %w", err)
 	}
 	return product, nil
 }
 
-func (p *ProductRepo) UpdateProduct(in entity.ProductRequest) (entity.Product, error) {
+func (p *ProductRepo) AddProduct(in entity.AddProductRequest) (entity.Product, error) {
 	var product entity.Product
+
 	query := `
 		UPDATE products 
-		SET name = $1, bill_format = $2, base_price = $3, category_id = $4
-		WHERE id = $5
-		RETURNING id, category_id, name, bill_format, base_price, total_count, created_at
+		SET total_count = total_count + $1
+		WHERE id = $2
+		RETURNING id, category_id, name, bill_format, incoming_price, standard_price, total_count, created_at
 	`
-	err := p.db.QueryRowx(query, in.Name, in.BillFormat, in.BasicPrice, in.CategoryID, in.ID).
-		Scan(&product.ID, &product.CategoryID, &product.Name, &product.BillFormat, &product.BasicPrice, &product.TotalCount, &product.CreatedAt)
+	err := p.db.QueryRowx(query, in.Count, in.Id).
+		Scan(&product.ID, &product.CategoryID, &product.Name, &product.BillFormat, &product.IncomingPrice, &product.StandardPrice, &product.TotalCount, &product.CreatedAt)
+	if err != nil {
+		return entity.Product{}, fmt.Errorf("failed to add product stock: %w", err)
+	}
+
+	return product, nil
+}
+
+func (p *ProductRepo) UpdateProduct(in entity.ProductRequest) (entity.Product, error) {
+	var product entity.Product
+	query := `UPDATE products SET `
+	var args []interface{}
+	argCounter := 1
+
+	// Dynamically build the query based on non-empty fields
+	if in.CategoryID != "" {
+		query += fmt.Sprintf("category_id = $%d, ", argCounter)
+		args = append(args, in.CategoryID)
+		argCounter++
+	}
+	if in.Name != "" {
+		query += fmt.Sprintf("name = $%d, ", argCounter)
+		args = append(args, in.Name)
+		argCounter++
+	}
+	if in.BillFormat != "" {
+		query += fmt.Sprintf("bill_format = $%d, ", argCounter)
+		args = append(args, in.BillFormat)
+		argCounter++
+	}
+	if in.IncomingPrice != 0 {
+		query += fmt.Sprintf("incoming_price = $%d, ", argCounter)
+		args = append(args, in.IncomingPrice)
+		argCounter++
+	}
+	if in.StandardPrice != 0 {
+		query += fmt.Sprintf("standard_price = $%d, ", argCounter)
+		args = append(args, in.StandardPrice)
+		argCounter++
+	}
+	if in.TotalCount != 0 {
+		query += fmt.Sprintf("total_count = $%d, ", argCounter)
+		args = append(args, in.TotalCount)
+		argCounter++
+	}
+
+	// Remove trailing comma and space, add WHERE clause
+	query = query[:len(query)-2] + fmt.Sprintf(" WHERE id = $%d RETURNING id, category_id, name, bill_format, incoming_price, standard_price, total_count, created_at", argCounter)
+	args = append(args, in.ID)
+
+	// Execute the query
+	err := p.db.QueryRowx(query, args...).Scan(&product.ID, &product.CategoryID, &product.Name, &product.BillFormat, &product.IncomingPrice, &product.StandardPrice, &product.TotalCount, &product.CreatedAt)
 	if err != nil {
 		return entity.Product{}, fmt.Errorf("failed to update product: %w", err)
 	}
+
 	return product, nil
 }
 
@@ -103,7 +156,7 @@ func (p *ProductRepo) DeleteProduct(in entity.ProductID) (entity.Message, error)
 
 func (p *ProductRepo) GetProduct(in entity.ProductID) (entity.Product, error) {
 	var product entity.Product
-	query := `SELECT id, category_id, name, bill_format, base_price, total_count, created_at FROM products WHERE id = $1`
+	query := `SELECT id, category_id, name, bill_format, incoming_price, standard_price, total_count, created_at FROM products WHERE id = $1`
 	err := p.db.Get(&product, query, in.ID)
 	if err != nil {
 		return entity.Product{}, fmt.Errorf("failed to get product: %w", err)
@@ -114,7 +167,7 @@ func (p *ProductRepo) GetProduct(in entity.ProductID) (entity.Product, error) {
 func (p *ProductRepo) GetProductList(in entity.FilterProduct) (entity.ProductList, error) {
 	var products []entity.Product
 	query := `
-		SELECT id, category_id, name, bill_format, base_price, total_count, created_at
+		SELECT id, category_id, name, bill_format, incoming_price, standard_price, total_count, created_at
 		FROM products 
 		WHERE ($1::UUID IS NULL OR category_id = $1) 
 		  AND ($2::VARCHAR IS NULL OR name ILIKE '%' || $2 || '%')
