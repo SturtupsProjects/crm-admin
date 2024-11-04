@@ -34,6 +34,7 @@ type FilterProduct struct {
 }
 
 type ProductRequest struct {
+	ID         string  `json:"id" db:"id"`
 	CategoryID string  `json:"category_id" db:"category_id"`
 	Name       string  `json:"name" db:"name"`
 	BillFormat string  `json:"bill_format" db:"bill_format"`
