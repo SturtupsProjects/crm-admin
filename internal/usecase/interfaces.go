@@ -39,3 +39,11 @@ type SalesRepo interface {
 	GetSalesList() error
 	DeleteSales() error
 }
+
+type ReturnedProductsRepo interface {
+	CreateReturnedProducts() error
+	UpdateReturnedProducts() error
+	GetReturnedProducts() error
+	GetReturnedProductsList() error
+	DeleteReturnedProducts() error
+}
