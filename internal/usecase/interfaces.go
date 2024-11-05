@@ -23,3 +23,19 @@ type UsersRepo interface {
 	DeleteUser(in entity.UserID) (entity.Message, error)
 	UpdateUser(in entity.UserRequest) (entity.User, error)
 }
+
+type PurchasesRepo interface {
+	CreatePurchases() error
+	UpdatePurchases() error
+	GetPurchases() error
+	GetPurchasesList() error
+	DeletePurchases() error
+}
+
+type SalesRepo interface {
+	CreateSales() error
+	UpdateSales() error
+	GetSales() error
+	GetSalesList() error
+	DeleteSales() error
+}
