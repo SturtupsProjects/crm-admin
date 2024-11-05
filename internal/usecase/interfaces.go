@@ -33,11 +33,11 @@ type PurchasesRepo interface {
 }
 
 type SalesRepo interface {
-	CreateSale(in entity.SaleRequest) (entity.Sale, error)
-	UpdateSale(in entity.SaleRequest) (entity.Sale, error)
-	GetSale(in entity.Sale) (entity.Sale, error)
-	GetSaleList() (entity.SaleList, error)
-	DeleteSale(in entity.Sale) (entity.Message, error)
+	CreateSale(in entity.SaleRequest) (entity.SaleResponse, error)
+	UpdateSale(in entity.SaleRequest) (entity.SaleResponse, error)
+	GetSale(in entity.SaleID) (entity.SaleResponse, error)
+	GetSaleList(filter entity.SaleFilter) (entity.SaleList, error)
+	DeleteSale(in entity.SaleID) (entity.Message, error)
 }
 
 type ReturnedProductsRepo interface {

@@ -1,8 +1,6 @@
--- Создаем ENUM типы для способов оплаты и типов транзакций
 CREATE TYPE payment_method AS ENUM ('uzs', 'usd', 'card');
 CREATE TYPE transaction_type AS ENUM ('income', 'expense');
 
--- Таблица пользователей
 CREATE TABLE users
 (
     user_id      UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -14,7 +12,6 @@ CREATE TABLE users
     created_at   TIMESTAMP DEFAULT NOW()
 );
 
--- Таблица клиентов
 CREATE TABLE clients
 (
     id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -24,7 +21,6 @@ CREATE TABLE clients
     created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Таблица категорий продуктов
 CREATE TABLE product_categories
 (
     id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -33,7 +29,6 @@ CREATE TABLE product_categories
     created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Таблица продуктов
 CREATE TABLE products
 (
     id             UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -47,8 +42,7 @@ CREATE TABLE products
     created_at     TIMESTAMP DEFAULT NOW()
 );
 
--- Таблица заказов (продаж)
-CREATE TABLE orders
+CREATE TABLE sales
 (
     id               UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     client_id        UUID REFERENCES clients (id) NOT NULL,
@@ -58,8 +52,7 @@ CREATE TABLE orders
     created_at       TIMESTAMP DEFAULT NOW()
 );
 
--- Таблица позиций заказа (каждый товар в заказе)
-CREATE TABLE order_items
+CREATE TABLE sales_items
 (
     id             UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     order_id       UUID REFERENCES orders (id) NOT NULL,
@@ -69,14 +62,12 @@ CREATE TABLE order_items
     total_price    DECIMAL(10, 2) NOT NULL -- общая цена за конкретный товар в заказе
 );
 
--- Таблица категорий денежных потоков
 CREATE TABLE cash_category
 (
     id   UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name VARCHAR(50) NOT NULL
 );
 
--- Таблица денежных потоков (доходы и расходы)
 CREATE TABLE cash_flow
 (
     id               UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -89,7 +80,6 @@ CREATE TABLE cash_flow
     payment_method   payment_method DEFAULT 'uzs'
 );
 
--- Таблица задолженностей (по каждому заказу)
 CREATE TABLE debts
 (
     id            UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -104,7 +94,6 @@ CREATE TABLE debts
     created_at    TIMESTAMP DEFAULT NOW()
 );
 
--- Таблица для частичных выплат по задолженности
 CREATE TABLE debt_payments
 (
     id           UUID DEFAULT gen_random_uuid() PRIMARY KEY,

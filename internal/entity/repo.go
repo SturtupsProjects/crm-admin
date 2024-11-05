@@ -46,6 +46,7 @@ type ProductRequest struct {
 	TotalCount    int     `json:"total_count" db:"total_count"`
 	CreatedAt     string  `json:"created_at" db:"created_at"`
 }
+
 type AddProductRequest struct {
 	Id    string `json:"id" db:"id"`
 	Count int    `json:"count" db:"count"`
@@ -75,7 +76,6 @@ type Message struct {
 
 // PurchaseRequest is used for creating a purchase.
 
-// Purchase model represents a purchase transaction.
 type Purchase struct {
 	ID            string    `json:"id" db:"id"`
 	ProductID     string    `json:"product_id" db:"product_id"`
@@ -88,7 +88,6 @@ type Purchase struct {
 	CreatedAt     time.Time `json:"created_at" db:"created_at"`
 }
 
-// PurchaseRequest model is used for creating a new purchase.
 type PurchaseRequest struct {
 	ProductID     string  `json:"product_id"`
 	SalespersonID string  `json:"salesperson_id"`
@@ -98,9 +97,11 @@ type PurchaseRequest struct {
 	Description   string  `json:"description,omitempty"`
 	BoughtBy      string  `json:"bought_by"`
 }
+
 type PurchaseID struct {
 	ID string `json:"id" db:"id"`
 }
+
 type FilterPurchase struct {
 	ProductID     string `json:"product_id" db:"product_id"`
 	SalespersonID string `json:"salesperson_id" db:"salesperson_id"`
@@ -108,40 +109,55 @@ type FilterPurchase struct {
 	CreatedAt     string `json:"created_at" db:"created_at"`
 }
 
-// Sales model represents a sale transaction.
-type Sale struct {
-	ID             string    `json:"id" db:"id"`
-	ProductID      string    `json:"product_id" db:"product_id"`
-	ClientID       string    `json:"client_id" db:"client_id"`
-	SalePrice      float64   `json:"sale_price" db:"sale_price"`
-	Quantity       int       `json:"quantity" db:"quantity"`
-	TotalSalePrice float64   `json:"total_sale_price" db:"total_sale_price"`
-	PaymentMethod  string    `json:"payment_method" db:"payment_method"`
-	SoldBy         string    `json:"sold_by" db:"sold_by"`
-	CreatedAt      time.Time `json:"created_at" db:"created_at"`
-}
-
-// SaleRequest model is used for creating a new sale.
-type SaleRequest struct {
-	ProductID      string  `json:"product_id"`
-	ClientID       string  `json:"client_id"`
-	SalePrice      float64 `json:"sale_price"`
-	Quantity       int     `json:"quantity"`
-	TotalSalePrice float64 `json:"total_sale_price"`
-	PaymentMethod  string  `json:"payment_method"`
-	SoldBy         string  `json:"sold_by"`
-}
-
-// PurchaseList and SaleList models are used to return lists of purchases and sales.
 type PurchaseList struct {
 	Purchases []Purchase `json:"purchases"`
 }
 
-type SaleList struct {
-	Sales []Sale `json:"sales"`
+// -----------Sales structs for repo -----------------------
+
+type SaleRequest struct {
+	ClientID       string      `json:"client_id" db:"client_id"`
+	SoldBy         string      `json:"sold_by" db:"sold_by"`
+	TotalSalePrice float64     `json:"total_sale_price" db:"total_sale_price"`
+	PaymentMethod  string      `json:"payment_method" db:"payment_method"`
+	SoldProducts   []SalesItem `json:"products" db:"products"`
 }
 
-// User structs for Repo -----------------------------------------
+type SaleResponse struct {
+	ID             string      `json:"id" db:"id"`
+	ClientID       string      `json:"client_id" db:"client_id"`
+	SoldBy         string      `json:"sold_by" db:"sold_by"`
+	TotalSalePrice float64     `json:"total_sale_price" db:"total_sale_price"`
+	PaymentMethod  string      `json:"payment_method" db:"payment_method"`
+	CreatedAt      string      `json:"created_at" db:"created_at"`
+	SoldProducts   []SalesItem `json:"products" db:"products"`
+}
+
+type SalesItem struct {
+	ID         string  `json:"id" db:"id"`
+	OrderId    string  `json:"order_id" db:"order_id"`
+	ProductID  string  `json:"product_id" db:"product_id"`
+	Quantity   int     `json:"quantity" db:"quantity"`
+	SalePrice  float64 `json:"sale_price" db:"sale_price"`
+	TotalPrice float64 `json:"total_price" db:"total_price"`
+}
+
+type SaleList struct {
+	Sales []SaleResponse `json:"sales"`
+}
+
+type SaleID struct {
+	ID string `json:"id" db:"id"`
+}
+
+type SaleFilter struct {
+	StartDate string `json:"start_date" db:"start_date"`
+	EndDate   string `json:"end_date" db:"end_date"`
+	ClientID  string `json:"client_id" db:"client_id"`
+}
+
+// -------- User structs for Repo -----------------------------------------
+
 type User struct {
 	UserID      string    `json:"user_id" db:"user_id"`
 	FirstName   string    `json:"first_name" db:"first_name"`
@@ -152,7 +168,6 @@ type User struct {
 	CreatedAt   time.Time `json:"created_at" db:"created_at"`
 }
 
-// UserRequest is used for creating or updating a user.
 type UserRequest struct {
 	UserID      string `json:"user_id,omitempty"` // Omitted for Create
 	FirstName   string `json:"first_name"`
@@ -162,19 +177,16 @@ type UserRequest struct {
 	Role        string `json:"role"`
 }
 
-// UserID is used for identifying a user in retrieval or deletion operations.
 type UserID struct {
 	ID string `json:"id"`
 }
 
-// FilterUser is used for filtering users in list operations.
 type FilterUser struct {
 	FirstName string `json:"first_name,omitempty"`
 	LastName  string `json:"last_name,omitempty"`
 	Role      string `json:"role,omitempty"`
 }
 
-// UserList represents a list of users, used in GetListUser responses.
 type UserList struct {
 	Users []User `json:"users"`
 }
