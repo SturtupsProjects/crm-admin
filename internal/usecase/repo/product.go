@@ -18,8 +18,8 @@ func NewProductRepo(db *sqlx.DB) *ProductRepo {
 
 func (p *ProductRepo) CreateProductCategory(in entity.CategoryName) (entity.Category, error) {
 	var category entity.Category
-	query := `INSERT INTO product_categories (name) VALUES ($1) RETURNING id, name, created_at`
-	err := p.db.QueryRowx(query, in.Name).Scan(&category.ID, &category.Name, &category.CreatedAt)
+	query := `INSERT INTO product_categories (name, created_by) VALUES ($1, $2) RETURNING id, name, created_at`
+	err := p.db.QueryRowx(query, in.Name, in.CreatedBy).Scan(&category.ID, &category.Name, &category.CreatedAt)
 	if err != nil {
 		return entity.Category{}, fmt.Errorf("failed to create product category: %w", err)
 	}
@@ -63,7 +63,7 @@ func (p *ProductRepo) GetListProductCategory() (entity.CategoryList, error) {
 func (p *ProductRepo) CreateProduct(in entity.ProductRequest) (entity.Product, error) {
 	var product entity.Product
 	query := `
-		INSERT INTO products (category_id, name, bill_format, incoming_price, standard_price, total_count, created_at)
+		INSERT INTO products (category_id, name, bill_format, incoming_price, standard_price, total_count,created_by , created_at)
 		VALUES ($1, $2, $3, $4, $5, $6, $7)
 		RETURNING id, category_id, name, bill_format, incoming_price, standard_price, total_count, created_at
 	`
@@ -79,7 +79,7 @@ func (p *ProductRepo) AddProduct(in entity.AddProductRequest) (entity.Product, e
 	var product entity.Product
 
 	query := `
-		UPDATE products 
+		UPDATE products
 		SET total_count = total_count + $1
 		WHERE id = $2
 		RETURNING id, category_id, name, bill_format, incoming_price, standard_price, total_count, created_at
@@ -156,7 +156,7 @@ func (p *ProductRepo) DeleteProduct(in entity.ProductID) (entity.Message, error)
 
 func (p *ProductRepo) GetProduct(in entity.ProductID) (entity.Product, error) {
 	var product entity.Product
-	query := `SELECT id, category_id, name, bill_format, incoming_price, standard_price, total_count, created_at FROM products WHERE id = $1`
+	query := `SELECT id, category_id, name, bill_format, incoming_price, standard_price, total_count,created_by, created_at FROM products WHERE id = $1`
 	err := p.db.Get(&product, query, in.ID)
 	if err != nil {
 		return entity.Product{}, fmt.Errorf("failed to get product: %w", err)
@@ -167,7 +167,7 @@ func (p *ProductRepo) GetProduct(in entity.ProductID) (entity.Product, error) {
 func (p *ProductRepo) GetProductList(in entity.FilterProduct) (entity.ProductList, error) {
 	var products []entity.Product
 	query := `
-		SELECT id, category_id, name, bill_format, incoming_price, standard_price, total_count, created_at
+		SELECT id, category_id, name, bill_format, incoming_price, standard_price, total_count,created_by, created_at
 		FROM products 
 		WHERE ($1::UUID IS NULL OR category_id = $1) 
 		  AND ($2::VARCHAR IS NULL OR name ILIKE '%' || $2 || '%')

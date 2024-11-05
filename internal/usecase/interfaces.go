@@ -25,17 +25,17 @@ type UsersRepo interface {
 }
 
 type PurchasesRepo interface {
-	CreatePurchases() error
-	UpdatePurchases() error
-	GetPurchases() error
-	GetPurchasesList() error
-	DeletePurchases() error
+	CreatePurchase(in entity.PurchaseRequest) (entity.Purchase, error)
+	UpdatePurchase(in entity.PurchaseRequest) (entity.Purchase, error)
+	GetPurchase(in entity.PurchaseID) (entity.Purchase, error)
+	GetPurchaseList(in entity.FilterPurchase) (entity.PurchaseList, error)
+	DeletePurchase(in entity.Purchase) (entity.Message, error)
 }
 
 type SalesRepo interface {
-	CreateSales() error
-	UpdateSales() error
-	GetSales() error
-	GetSalesList() error
-	DeleteSales() error
+	CreateSale(in entity.SaleRequest) (entity.Sale, error)
+	UpdateSale(in entity.SaleRequest) (entity.Sale, error)
+	GetSale(in entity.Sale) (entity.Sale, error)
+	GetSaleList() (entity.SaleList, error)
+	DeleteSale(in entity.Sale) (entity.Message, error)
 }
