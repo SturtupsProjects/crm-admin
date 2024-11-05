@@ -7,5 +7,7 @@ DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS product_categories;
 DROP TABLE IF EXISTS clients;
 DROP TABLE IF EXISTS users;
+
 DROP TYPE IF EXISTS transaction_type;
 DROP TYPE IF EXISTS payment_method;
+

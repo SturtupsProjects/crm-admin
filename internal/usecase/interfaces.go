@@ -15,6 +15,7 @@ type ProductsRepo interface {
 	GetProduct(in entity.ProductID) (entity.Product, error)
 	GetProductList(in entity.FilterProduct) (entity.ProductList, error)
 }
+
 type UsersRepo interface {
 	CreateUser(in entity.UserRequest) (entity.User, error)
 	GetUser(in entity.UserID) (entity.User, error)
