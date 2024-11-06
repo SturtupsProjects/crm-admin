@@ -159,22 +159,22 @@ type SaleFilter struct {
 // -------- User structs for Repo -----------------------------------------
 
 type User struct {
-	UserID      string    `json:"user_id" db:"user_id"`
-	FirstName   string    `json:"first_name" db:"first_name"`
-	LastName    string    `json:"last_name" db:"last_name"`
-	Email       string    `json:"email" db:"email"`
-	PhoneNumber string    `json:"phone_number" db:"phone_number"`
-	Role        string    `json:"role" db:"role"`
-	CreatedAt   time.Time `json:"created_at" db:"created_at"`
+	FirstName   string `json:"first_name" db:"first_name"`
+	LastName    string `json:"last_name" db:"last_name"`
+	Email       string `json:"email" db:"email"`
+	PhoneNumber string `json:"phone_number" db:"phone_number"`
+	Password    string `json:"password"`
+	Role        string `json:"role" db:"role"`
 }
 
 type UserRequest struct {
-	UserID      string `json:"user_id,omitempty"` // Omitted for Create
-	FirstName   string `json:"first_name"`
-	LastName    string `json:"last_name"`
-	Email       string `json:"email"`
-	PhoneNumber string `json:"phone_number"`
-	Role        string `json:"role"`
+	UserID      string    `json:"user_id,omitempty"` // Omitted for Create
+	FirstName   string    `json:"first_name"`
+	LastName    string    `json:"last_name"`
+	Email       string    `json:"email"`
+	PhoneNumber string    `json:"phone_number"`
+	Role        string    `json:"role"`
+	CreatedAt   time.Time `json:"created_at" db:"created_at"`
 }
 
 type UserID struct {
@@ -188,5 +188,10 @@ type FilterUser struct {
 }
 
 type UserList struct {
-	Users []User `json:"users"`
+	Users []UserRequest `json:"users"`
+}
+
+type AdminPass struct {
+	Login    string `json:"phone_number" db:"phone_number"`
+	Password string `json:"password" db:"password"`
 }

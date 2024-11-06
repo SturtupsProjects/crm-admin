@@ -2,6 +2,7 @@ package repo
 
 import (
 	"crm-admin/internal/entity"
+	"crm-admin/internal/usecase"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 )
@@ -10,27 +11,41 @@ type UserRepo struct {
 	db *sqlx.DB
 }
 
-func NewUserRepo(db *sqlx.DB) *UserRepo {
+func NewUserRepo(db *sqlx.DB) usecase.UsersRepo {
 	return &UserRepo{db: db}
 }
 
-func (u *UserRepo) CreateUser(in entity.UserRequest) (entity.User, error) {
-	var user entity.User
+func (u *UserRepo) AddAdmin(in entity.AdminPass) (entity.Message, error) {
+	res := entity.Message{}
+
+	_, err := u.db.Exec(`insert into users(first_name, last_name, email, phone_number, password, role)
+values ($1, $2, $3, $4, $5)`, "admin", "admin", "admin", in.Login, in.Password, "admin")
+	if err != nil {
+		return res, err
+	}
+
+	res.Message = "Owner added"
+
+	return res, nil
+}
+
+func (u *UserRepo) CreateUser(in entity.User) (entity.UserRequest, error) {
+	var user entity.UserRequest
 	query := `
-		INSERT INTO users (first_name, last_name, email, phone_number, role)
-		VALUES ($1, $2, $3, $4, $5)
+		INSERT INTO users (first_name, last_name, email, phone_number, password, role)
+		VALUES ($1, $2, $3, $4, $5, $6)
 		RETURNING user_id, first_name, last_name, email, phone_number, role, created_at
 	`
-	err := u.db.QueryRowx(query, in.FirstName, in.LastName, in.Email, in.PhoneNumber, in.Role).
+	err := u.db.QueryRowx(query, in.FirstName, in.LastName, in.Email, in.PhoneNumber, in.Password, in.Role).
 		Scan(&user.UserID, &user.FirstName, &user.LastName, &user.Email, &user.PhoneNumber, &user.Role, &user.CreatedAt)
 	if err != nil {
-		return entity.User{}, fmt.Errorf("failed to create user: %w", err)
+		return entity.UserRequest{}, fmt.Errorf("failed to create user: %w", err)
 	}
 	return user, nil
 }
 
 // GetUser retrieves a user by their ID.
-func (u *UserRepo) GetUser(in entity.UserID) (entity.User, error) {
+func (u *UserRepo) GetUser(in entity.UserID) (entity.UserRequest, error) {
 	var user entity.User
 	query := `SELECT user_id, first_name, last_name, email, phone_number, role, created_at FROM users WHERE user_id = $1`
 	err := u.db.Get(&user, query, in.ID)
@@ -42,7 +57,7 @@ func (u *UserRepo) GetUser(in entity.UserID) (entity.User, error) {
 
 // GetListUser retrieves a list of users based on filter criteria.
 func (u *UserRepo) GetListUser(in entity.FilterUser) (entity.UserList, error) {
-	var users []entity.User
+	var users []entity.UserRequest
 	query := `
 		SELECT user_id, first_name, last_name, email, phone_number, role, created_at
 		FROM users
@@ -70,8 +85,8 @@ func (u *UserRepo) DeleteUser(in entity.UserID) (entity.Message, error) {
 }
 
 // UpdateUser modifies the fields of a user based on the fields provided in UserRequest.
-func (u *UserRepo) UpdateUser(in entity.UserRequest) (entity.User, error) {
-	var user entity.User
+func (u *UserRepo) UpdateUser(in entity.UserRequest) (entity.UserRequest, error) {
+	var user entity.UserRequest
 	query := `UPDATE users SET `
 	var args []interface{}
 	argCounter := 1
@@ -110,7 +125,7 @@ func (u *UserRepo) UpdateUser(in entity.UserRequest) (entity.User, error) {
 	// Execute the query
 	err := u.db.QueryRowx(query, args...).Scan(&user.UserID, &user.FirstName, &user.LastName, &user.Email, &user.PhoneNumber, &user.Role, &user.CreatedAt)
 	if err != nil {
-		return entity.User{}, fmt.Errorf("failed to update user: %w", err)
+		return entity.UserRequest{}, fmt.Errorf("failed to update user: %w", err)
 	}
 
 	return user, nil

@@ -17,11 +17,12 @@ type ProductsRepo interface {
 }
 
 type UsersRepo interface {
-	CreateUser(in entity.UserRequest) (entity.User, error)
-	GetUser(in entity.UserID) (entity.User, error)
+	AddAdmin(in entity.AdminPass) (entity.Message, error)
+	CreateUser(in entity.User) (entity.UserRequest, error)
+	GetUser(in entity.UserID) (entity.UserRequest, error)
 	GetListUser(in entity.FilterUser) (entity.UserList, error)
 	DeleteUser(in entity.UserID) (entity.Message, error)
-	UpdateUser(in entity.UserRequest) (entity.User, error)
+	UpdateUser(in entity.UserRequest) (entity.UserRequest, error)
 }
 
 type PurchasesRepo interface {
