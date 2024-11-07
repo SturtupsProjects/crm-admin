@@ -1,1 +1,11 @@
 package crm_admin
+{"time":"2024-11-07T16:49:02.333319265+05:00","level":"ERROR","msg":"Error in adding admin","error":"dial tcp: lookup port=5432: no such host"}
+{"time":"2024-11-07T16:49:02.333654367+05:00","level":"ERROR","msg":"Error in registering admin","error":"dial tcp: lookup port=5432: no such host"}
+{"time":"2024-11-07T16:53:27.48417583+05:00","level":"ERROR","msg":"Error in adding admin","error":"pq: INSERT has more target columns than expressions"}
+{"time":"2024-11-07T16:53:27.484354047+05:00","level":"ERROR","msg":"Error in registering admin","error":"pq: INSERT has more target columns than expressions"}
+{"time":"2024-11-07T16:56:59.603307386+05:00","level":"ERROR","msg":"Error in logging in","error":"missing destination name user_id in *entity.LogInReq"}
+{"time":"2024-11-07T16:56:59.603543216+05:00","level":"ERROR","msg":"Error in login","error":"missing destination name user_id in *entity.LogInReq"}
+{"time":"2024-11-07T16:57:55.846880105+05:00","level":"ERROR","msg":"Error in getting user list","error":"failed to list users: missing destination name user_id in *[]entity.UserRequest"}
+{"time":"2024-11-07T16:57:55.846948014+05:00","level":"ERROR","msg":"Error in getting user","error":"failed to list users: missing destination name user_id in *[]entity.UserRequest"}
+{"time":"2024-11-07T17:01:27.308578144+05:00","level":"ERROR","msg":"Error in getting user","error":"failed to get user: sql: no rows in result set"}
+{"time":"2024-11-07T17:01:27.308655843+05:00","level":"ERROR","msg":"Error in getting user","error":"failed to get user: sql: no rows in result set"}

@@ -23,6 +23,7 @@ type UsersRepo interface {
 	GetListUser(in entity.FilterUser) (entity.UserList, error)
 	DeleteUser(in entity.UserID) (entity.Message, error)
 	UpdateUser(in entity.UserRequest) (entity.UserRequest, error)
+	LogIn(in entity.PhoneNumber) (entity.LogInReq, error)
 }
 
 type PurchasesRepo interface {

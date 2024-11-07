@@ -2,7 +2,8 @@ package usecase
 
 import (
 	"crm-admin/internal/entity"
-	"crm-admin/internal/usecase/hashing"
+	"crm-admin/internal/usecase/help"
+	"crm-admin/internal/usecase/token"
 	"log/slog"
 )
 
@@ -19,9 +20,9 @@ func NewUserUseCase(repo UsersRepo, log *slog.Logger) *UserUseCase {
 }
 
 func (u *UserUseCase) RegisterAdmin(in entity.AdminPass) (entity.Message, error) {
-	hash, err := hashing.HashPassword(in.Password)
+	hash, err := help.HashPassword(in.Password)
 	if err != nil {
-		u.log.Error("Error in hashing password", "error", err)
+		u.log.Error("Error in help password", "error", err)
 		return entity.Message{}, err
 	}
 
@@ -37,9 +38,9 @@ func (u *UserUseCase) RegisterAdmin(in entity.AdminPass) (entity.Message, error)
 }
 
 func (u *UserUseCase) AddUser(in entity.User) (entity.UserRequest, error) {
-	hash, err := hashing.HashPassword(in.Password)
+	hash, err := help.HashPassword(in.Password)
 	if err != nil {
-		u.log.Error("Error in hashing password", "error", err)
+		u.log.Error("Error in help password", "error", err)
 		return entity.UserRequest{}, err
 	}
 
@@ -92,4 +93,34 @@ func (u *UserUseCase) DeleteUser(in entity.UserID) (entity.Message, error) {
 	}
 
 	return res, nil
+}
+
+func (u *UserUseCase) LogIn(in entity.LogIn) (entity.Token, error) {
+	phone := entity.PhoneNumber{in.PhoneNumber}
+
+	res, err := u.repo.LogIn(phone)
+	if err != nil {
+		u.log.Error("Error in logging in", "error", err)
+		return entity.Token{}, err
+	}
+
+	accessToken, err := token.GenerateAccessToken(res)
+	if err != nil {
+		u.log.Error("Error in generating access token", "error", err)
+		return entity.Token{}, err
+	}
+
+	refreshToken, err := token.GenerateRefreshToken(res)
+	if err != nil {
+		u.log.Error("Error in generating refresh token", "error", err)
+		return entity.Token{}, err
+	}
+
+	expireAt := token.GetExpires()
+
+	return entity.Token{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		ExpireAt:     expireAt,
+	}, nil
 }

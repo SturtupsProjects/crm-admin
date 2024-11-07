@@ -19,7 +19,7 @@ func (u *UserRepo) AddAdmin(in entity.AdminPass) (entity.Message, error) {
 	res := entity.Message{}
 
 	_, err := u.db.Exec(`insert into users(first_name, last_name, email, phone_number, password, role)
-values ($1, $2, $3, $4, $5)`, "admin", "admin", "admin", in.Login, in.Password, "admin")
+values ($1, $2, $3, $4, $5, $6)`, "admin", "admin", "admin", in.Login, in.Password, "admin")
 	if err != nil {
 		return res, err
 	}
@@ -46,11 +46,11 @@ func (u *UserRepo) CreateUser(in entity.User) (entity.UserRequest, error) {
 
 // GetUser retrieves a user by their ID.
 func (u *UserRepo) GetUser(in entity.UserID) (entity.UserRequest, error) {
-	var user entity.User
+	var user entity.UserRequest
 	query := `SELECT user_id, first_name, last_name, email, phone_number, role, created_at FROM users WHERE user_id = $1`
 	err := u.db.Get(&user, query, in.ID)
 	if err != nil {
-		return entity.User{}, fmt.Errorf("failed to get user: %w", err)
+		return entity.UserRequest{}, fmt.Errorf("failed to get user: %w", err)
 	}
 	return user, nil
 }
@@ -129,4 +129,17 @@ func (u *UserRepo) UpdateUser(in entity.UserRequest) (entity.UserRequest, error)
 	}
 
 	return user, nil
+}
+
+func (u *UserRepo) LogIn(in entity.PhoneNumber) (entity.LogInReq, error) {
+	res := entity.LogInReq{}
+
+	err := u.db.Get(&res, `select user_id, first_name, phone_number, role from users
+	where phone_number = $1`, in.PhoneNumber)
+
+	if err != nil {
+		return entity.LogInReq{}, err
+	}
+
+	return res, nil
 }
