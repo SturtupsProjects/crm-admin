@@ -11,7 +11,7 @@ type ProductsRepo interface {
 	CreateProduct(in entity.ProductRequest) (entity.Product, error)
 	AddProduct(in entity.AddProductRequest) (entity.Product, error)
 	UpdateProduct(in entity.ProductRequest) (entity.Product, error)
-	DeleteProduct(in entity.Product) (entity.Message, error)
+	DeleteProduct(in entity.ProductID) (entity.Message, error)
 	GetProduct(in entity.ProductID) (entity.Product, error)
 	GetProductList(in entity.FilterProduct) (entity.ProductList, error)
 }

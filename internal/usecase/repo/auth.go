@@ -5,6 +5,7 @@ import (
 	"crm-admin/internal/usecase"
 	"fmt"
 	"github.com/jmoiron/sqlx"
+	"strings"
 )
 
 type UserRepo struct {
@@ -55,18 +56,42 @@ func (u *UserRepo) GetUser(in entity.UserID) (entity.UserRequest, error) {
 	return user, nil
 }
 
-// GetListUser retrieves a list of users based on filter criteria.
 func (u *UserRepo) GetListUser(in entity.FilterUser) (entity.UserList, error) {
 	var users []entity.UserRequest
-	query := `
+	var queryBuilder strings.Builder
+	var args []interface{}
+
+	// Начинаем строить базовый запрос
+	queryBuilder.WriteString(`
 		SELECT user_id, first_name, last_name, email, phone_number, role, created_at
 		FROM users
-		WHERE ($1::VARCHAR IS NULL OR first_name ILIKE '%' || $1 || '%')
-		  AND ($2::VARCHAR IS NULL OR last_name ILIKE '%' || $2 || '%')
-		  AND ($3::VARCHAR IS NULL OR role = $3)
-		ORDER BY created_at DESC
-	`
-	err := u.db.Select(&users, query, in.FirstName, in.LastName, in.Role)
+		WHERE 1=1
+	`)
+
+	// Добавляем фильтр по имени, если поле не пустое
+	if in.FirstName != "" {
+		queryBuilder.WriteString(" AND first_name ILIKE '%' || $1 || '%'")
+		args = append(args, in.FirstName)
+	}
+
+	// Добавляем фильтр по фамилии, если поле не пустое
+	if in.LastName != "" {
+		queryBuilder.WriteString(" AND last_name ILIKE '%' || $2 || '%'")
+		args = append(args, in.LastName)
+	}
+
+	// Добавляем фильтр по роли, если поле не пустое
+	if in.Role != "" {
+		queryBuilder.WriteString(" AND role = $3")
+		args = append(args, in.Role)
+	}
+
+	// Заканчиваем запрос сортировкой
+	queryBuilder.WriteString(" ORDER BY created_at DESC")
+
+	// Выполняем запрос
+	query := queryBuilder.String()
+	err := u.db.Select(&users, query, args...)
 	if err != nil {
 		return entity.UserList{}, fmt.Errorf("failed to list users: %w", err)
 	}

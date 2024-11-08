@@ -2,6 +2,7 @@ package repo
 
 import (
 	"crm-admin/internal/entity"
+	"crm-admin/internal/usecase"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 )
@@ -10,7 +11,7 @@ type ProductRepo struct {
 	db *sqlx.DB
 }
 
-func NewProductRepo(db *sqlx.DB) *ProductRepo {
+func NewProductRepo(db *sqlx.DB) usecase.ProductsRepo {
 	return &ProductRepo{db: db}
 }
 
@@ -46,7 +47,7 @@ func (p *ProductRepo) GetProductCategory(in entity.CategoryID) (entity.Category,
 	return category, nil
 }
 
-func (p *ProductRepo) GetListProductCategory() (entity.CategoryList, error) {
+func (p *ProductRepo) GetListProductCategory(in entity.CategoryName) (entity.CategoryList, error) {
 	var categories []entity.Category
 	query := `SELECT id, name, created_at FROM product_categories`
 	err := p.db.Select(&categories, query)

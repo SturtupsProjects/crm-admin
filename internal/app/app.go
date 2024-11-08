@@ -13,6 +13,8 @@ import (
 )
 
 func Run(cfg config.Config) {
+	logger1 := logger.NewLogger()
+
 	db, err := postgres.Connection(cfg)
 	if err != nil {
 		log.Fatal(err)
@@ -22,8 +24,6 @@ func Run(cfg config.Config) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	logger1 := logger.NewLogger()
 
 	userRepo := repo.NewUserRepo(db)
 	userUseCase := usecase.NewUserUseCase(userRepo, logger1)
