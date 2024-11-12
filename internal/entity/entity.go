@@ -16,6 +16,7 @@ type CategoryID struct {
 type Category struct {
 	ID        string `json:"id" db:"id"`
 	Name      string `json:"name" db:"name"`
+	CreatedBy string `json:"created_by" db:"created_by"`
 	CreatedAt string `json:"created_at" db:"created_at"`
 }
 
@@ -33,21 +34,28 @@ type FilterProduct struct {
 	CategoryId string `json:"category_id" db:"category_id"`
 	Name       string `json:"name" db:"name"`
 	TotalCount string `json:"total_count" db:"total_count"`
-	CreatedAt  string `json:"created_at" db:"created_at"`
+	CreatedBy  string `json:"created_by" db:"created_by"`
 }
 
 type ProductRequest struct {
+	CategoryID    string  `json:"category_id" db:"category_id"`
+	Name          string  `json:"name" db:"name"`
+	BillFormat    string  `json:"bill_format" db:"bill_format"`
+	IncomingPrice float32 `json:"incoming_price" db:"incoming_price"`
+	StandardPrice float32 `json:"standard_price" db:"standard_price"`
+	CreatedBy     string  `json:"created_by" db:"created_by"`
+}
+
+type ProductUpdate struct {
 	ID            string  `json:"id" db:"id"`
 	CategoryID    string  `json:"category_id" db:"category_id"`
 	Name          string  `json:"name" db:"name"`
 	BillFormat    string  `json:"bill_format" db:"bill_format"`
 	IncomingPrice float32 `json:"incoming_price" db:"incoming_price"`
 	StandardPrice float32 `json:"standard_price" db:"standard_price"`
-	TotalCount    int     `json:"total_count" db:"total_count"`
-	CreatedAt     string  `json:"created_at" db:"created_at"`
 }
 
-type AddProductRequest struct {
+type ProductNumber struct {
 	Id    string `json:"id" db:"id"`
 	Count int    `json:"count" db:"count"`
 }

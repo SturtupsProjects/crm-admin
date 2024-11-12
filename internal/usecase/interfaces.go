@@ -9,11 +9,13 @@ type ProductsRepo interface {
 	GetListProductCategory(in entity.CategoryName) (entity.CategoryList, error)
 
 	CreateProduct(in entity.ProductRequest) (entity.Product, error)
-	AddProduct(in entity.AddProductRequest) (entity.Product, error)
-	UpdateProduct(in entity.ProductRequest) (entity.Product, error)
+	UpdateProduct(in entity.ProductUpdate) (entity.Product, error)
 	DeleteProduct(in entity.ProductID) (entity.Message, error)
 	GetProduct(in entity.ProductID) (entity.Product, error)
 	GetProductList(in entity.FilterProduct) (entity.ProductList, error)
+
+	AddProduct(in entity.ProductNumber) (entity.Product, error)
+	RemoveProduct(in entity.ProductNumber) (entity.Product, error)
 }
 
 type UsersRepo interface {
