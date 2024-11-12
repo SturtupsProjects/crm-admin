@@ -124,6 +124,7 @@ type PurchaseList struct {
 // -----------Sales structs for repo -----------------------
 
 type SaleRequest struct {
+	Id             string      `json:"id" db:"id"`
 	ClientID       string      `json:"client_id" db:"client_id"`
 	SoldBy         string      `json:"sold_by" db:"sold_by"`
 	TotalSalePrice float64     `json:"total_sale_price" db:"total_sale_price"`
