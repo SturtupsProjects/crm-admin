@@ -1,6 +1,8 @@
+-- Типы ENUM для указания метода оплаты и типа транзакции
 CREATE TYPE payment_method AS ENUM ('uzs', 'usd', 'card');
 CREATE TYPE transaction_type AS ENUM ('income', 'expense');
 
+-- Таблица пользователей
 CREATE TABLE users
 (
     user_id      UUID      DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -13,6 +15,7 @@ CREATE TABLE users
     created_at   TIMESTAMP DEFAULT NOW()
 );
 
+-- Таблица клиентов
 CREATE TABLE clients
 (
     id         UUID      DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -22,6 +25,7 @@ CREATE TABLE clients
     created_at TIMESTAMP DEFAULT NOW()
 );
 
+-- Таблица категорий товаров
 CREATE TABLE product_categories
 (
     id         UUID      DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -30,6 +34,7 @@ CREATE TABLE product_categories
     created_at TIMESTAMP DEFAULT NOW()
 );
 
+-- Таблица товаров
 CREATE TABLE products
 (
     id             UUID      DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -43,6 +48,7 @@ CREATE TABLE products
     created_at     TIMESTAMP DEFAULT NOW()
 );
 
+-- Таблица продаж
 CREATE TABLE sales
 (
     id               UUID           DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -53,22 +59,25 @@ CREATE TABLE sales
     created_at       TIMESTAMP      DEFAULT NOW()
 );
 
+-- Таблица товаров, проданных в рамках конкретной продажи
 CREATE TABLE sales_items
 (
     id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    order_id    UUID REFERENCES sales (id)   NOT NULL,
+    sale_id    UUID REFERENCES sales (id)    NOT NULL,
     product_id  UUID REFERENCES products (id) NOT NULL,
     quantity    INT  DEFAULT 1                NOT NULL,
     sale_price  DECIMAL(10, 2)                NOT NULL,
     total_price DECIMAL(10, 2)                NOT NULL -- общая цена за конкретный товар в заказе
 );
 
+-- Категории для учета денежных потоков
 CREATE TABLE cash_category
 (
     id   UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name VARCHAR(50) NOT NULL
 );
 
+-- Таблица денежных потоков
 CREATE TABLE cash_flow
 (
     id               UUID           DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -81,10 +90,11 @@ CREATE TABLE cash_flow
     payment_method   payment_method DEFAULT 'uzs'
 );
 
+-- Таблица долгов
 CREATE TABLE debts
 (
     id            UUID      DEFAULT gen_random_uuid() PRIMARY KEY,
-    order_id      UUID REFERENCES sales (id)     NOT NULL, -- Привязка долга к заказу
+    order_id      UUID REFERENCES sales (id)      NOT NULL, -- Привязка долга к заказу
     amount_paid   DECIMAL(10, 2)                  NOT NULL, -- Сумма, уже оплаченная
     amount_unpaid DECIMAL(10, 2)                  NOT NULL, -- Сумма, остающаяся к оплате
     total_debt    DECIMAL(10, 2)                  NOT NULL, -- Общая сумма долга
@@ -95,6 +105,7 @@ CREATE TABLE debts
     created_at    TIMESTAMP DEFAULT NOW()
 );
 
+-- Таблица платежей по долгам
 CREATE TABLE debt_payments
 (
     id           UUID      DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -102,4 +113,27 @@ CREATE TABLE debt_payments
     payment_date TIMESTAMP DEFAULT NOW(),
     amount       DECIMAL(10, 2)                  NOT NULL, -- Сумма частичного платежа
     paid_by      UUID REFERENCES users (user_id) NOT NULL  -- Кто внес платёж
+);
+
+-- Таблица закупок
+CREATE TABLE purchases
+(
+    id             UUID           DEFAULT gen_random_uuid() PRIMARY KEY,
+    supplier_id    UUID REFERENCES clients (id)    NOT NULL, -- Название поставщика или имя компании
+    purchased_by   UUID REFERENCES users (user_id) NOT NULL, -- Кто произвел закупку
+    total_cost     DECIMAL(10, 2)                  NOT NULL, -- Общая сумма закупки
+    payment_method payment_method DEFAULT 'uzs',             -- Способ оплаты
+    description    TEXT,
+    created_at     TIMESTAMP      DEFAULT NOW()              -- Время создания записи
+);
+
+-- Таблица товаров, закупленных в рамках конкретной закупки
+CREATE TABLE purchase_items
+(
+    id             UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    purchase_id    UUID REFERENCES purchases (id) NOT NULL, -- Ссылка на закупку
+    product_id     UUID REFERENCES products (id)  NOT NULL, -- Ссылка на товар
+    quantity       INT                            NOT NULL, -- Количество закупленного товара
+    purchase_price DECIMAL(10, 2)                 NOT NULL, -- Цена закупки за единицу товара
+    total_price    DECIMAL(10, 2)                 NOT NULL  -- Общая стоимость конкретного товара в закупке
 );

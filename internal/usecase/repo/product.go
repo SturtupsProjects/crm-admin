@@ -8,17 +8,17 @@ import (
 	"strings"
 )
 
-type ProductRepo struct {
+type productRepo struct {
 	db *sqlx.DB
 }
 
 func NewProductRepo(db *sqlx.DB) usecase.ProductsRepo {
-	return &ProductRepo{db: db}
+	return &productRepo{db: db}
 }
 
 //---------------- Product Category CRUD -----------------------------------------------------------------------------
 
-func (p *ProductRepo) CreateProductCategory(in entity.CategoryName) (entity.Category, error) {
+func (p *productRepo) CreateProductCategory(in entity.CategoryName) (entity.Category, error) {
 	var category entity.Category
 
 	query := `INSERT INTO product_categories (name, created_by) VALUES ($1, $2) RETURNING id, name,created_by, created_at`
@@ -30,7 +30,7 @@ func (p *ProductRepo) CreateProductCategory(in entity.CategoryName) (entity.Cate
 	return category, nil
 }
 
-func (p *ProductRepo) DeleteProductCategory(in entity.CategoryID) (entity.Message, error) {
+func (p *productRepo) DeleteProductCategory(in entity.CategoryID) (entity.Message, error) {
 	query := `DELETE FROM product_categories WHERE id = $1`
 
 	res, err := p.db.Exec(query, in.ID)
@@ -42,7 +42,7 @@ func (p *ProductRepo) DeleteProductCategory(in entity.CategoryID) (entity.Messag
 	return entity.Message{Message: fmt.Sprintf("Deleted %d category(ies)", rows)}, nil
 }
 
-func (p *ProductRepo) GetProductCategory(in entity.CategoryID) (entity.Category, error) {
+func (p *productRepo) GetProductCategory(in entity.CategoryID) (entity.Category, error) {
 	var category entity.Category
 	query := `SELECT id, name, created_by, created_at FROM product_categories WHERE id = $1`
 
@@ -54,7 +54,7 @@ func (p *ProductRepo) GetProductCategory(in entity.CategoryID) (entity.Category,
 	return category, nil
 }
 
-func (p *ProductRepo) GetListProductCategory(in entity.CategoryName) (entity.CategoryList, error) {
+func (p *productRepo) GetListProductCategory(in entity.CategoryName) (entity.CategoryList, error) {
 	var categories []entity.Category
 	query := `SELECT id, name, created_by,created_at FROM product_categories`
 	args := make([]interface{}, 1)
@@ -75,7 +75,7 @@ func (p *ProductRepo) GetListProductCategory(in entity.CategoryName) (entity.Cat
 
 // ------------------- Product CRUD ------------------------------------------------------------------------
 
-func (p *ProductRepo) CreateProduct(in entity.ProductRequest) (entity.Product, error) {
+func (p *productRepo) CreateProduct(in entity.ProductRequest) (entity.Product, error) {
 	var product entity.Product
 
 	query := `
@@ -94,7 +94,7 @@ func (p *ProductRepo) CreateProduct(in entity.ProductRequest) (entity.Product, e
 	return product, nil
 }
 
-func (p *ProductRepo) UpdateProduct(in entity.ProductUpdate) (entity.Product, error) {
+func (p *productRepo) UpdateProduct(in entity.ProductUpdate) (entity.Product, error) {
 	var product entity.Product
 	query := `UPDATE products SET `
 	var args []interface{}
@@ -143,7 +143,7 @@ func (p *ProductRepo) UpdateProduct(in entity.ProductUpdate) (entity.Product, er
 	return product, nil
 }
 
-func (p *ProductRepo) DeleteProduct(in entity.ProductID) (entity.Message, error) {
+func (p *productRepo) DeleteProduct(in entity.ProductID) (entity.Message, error) {
 	query := `DELETE FROM products WHERE id = $1`
 
 	res, err := p.db.Exec(query, in.ID)
@@ -155,7 +155,7 @@ func (p *ProductRepo) DeleteProduct(in entity.ProductID) (entity.Message, error)
 	return entity.Message{Message: fmt.Sprintf("Deleted %d product(s)", rows)}, nil
 }
 
-func (p *ProductRepo) GetProduct(in entity.ProductID) (entity.Product, error) {
+func (p *productRepo) GetProduct(in entity.ProductID) (entity.Product, error) {
 	var product entity.Product
 	query := `SELECT id, category_id, name, bill_format, incoming_price, standard_price,
        total_count, created_by, created_at FROM products WHERE id = $1`
@@ -169,7 +169,7 @@ func (p *ProductRepo) GetProduct(in entity.ProductID) (entity.Product, error) {
 	return product, nil
 }
 
-func (p *ProductRepo) GetProductList(in entity.FilterProduct) (entity.ProductList, error) {
+func (p *productRepo) GetProductList(in entity.FilterProduct) (entity.ProductList, error) {
 	var products []entity.Product
 	var args []interface{}
 	var filters []string
@@ -218,7 +218,7 @@ func (p *ProductRepo) GetProductList(in entity.FilterProduct) (entity.ProductLis
 
 // -------------------------------------------- Must fix end Do Reflect -------------------------------------
 
-func (p *ProductRepo) AddProduct(in entity.ProductNumber) (entity.Product, error) {
+func (p *productRepo) AddProduct(in entity.ProductNumber) (entity.Product, error) {
 	var product entity.Product
 
 	query := `
@@ -236,6 +236,6 @@ func (p *ProductRepo) AddProduct(in entity.ProductNumber) (entity.Product, error
 	return product, nil
 }
 
-func (p *ProductRepo) RemoveProduct(in entity.ProductNumber) (entity.Product, error) {
+func (p *productRepo) RemoveProduct(in entity.ProductNumber) (entity.Product, error) {
 	return entity.Product{}, nil
 }

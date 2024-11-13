@@ -2,7 +2,7 @@ package entity
 
 import "time"
 
-// ProductCategory structs for Repo -----------------------------
+// ----------------- ProductCategory structs for Repo -----------------------------
 
 type CategoryName struct {
 	Name      string `json:"name" db:"name"`
@@ -24,7 +24,7 @@ type CategoryList struct {
 	Categories []Category `json:"categories"`
 }
 
-// Product structs for Repo -----------------------------------------
+// ----------------------- Product structs for Repo -----------------------------------------
 
 type ProductID struct {
 	ID string `json:"id" db:"id"`
@@ -76,34 +76,70 @@ type ProductList struct {
 	Products []Product `json:"products"`
 }
 
-// Message ---------------------------------------------
+// ---------------------------------- Message ---------------------------------------------
 
 type Message struct {
 	Message string `json:"message"`
 }
 
-// PurchaseRequest is used for creating a purchase.
+// -------------- PurchaseRequest is used for creating a purchase ----------------------------
 
-type Purchase struct {
-	ID            string    `json:"id" db:"id"`
-	ProductID     string    `json:"product_id" db:"product_id"`
-	SalespersonID string    `json:"salesperson_id" db:"salesperson_id"`
-	Quantity      int       `json:"quantity" db:"quantity"`
-	Price         float64   `json:"price" db:"price"`
-	TotalPrice    float64   `json:"total_price" db:"total_price"`
-	Description   string    `json:"description,omitempty" db:"description"`
-	BoughtBy      string    `json:"bought_by" db:"bought_by"`
-	CreatedAt     time.Time `json:"created_at" db:"created_at"`
+type PurchaseUpdate struct {
+	ID            string `json:"id" db:"id"`
+	SupplierID    string `json:"supplier_id" db:"supplier_id"`
+	Description   string `json:"description" db:"description"`
+	PaymentMethod string `json:"payment_method" db:"payment_method"`
+}
+
+type PurchaseResponse struct {
+	ID            string            `json:"id" db:"id"`
+	SupplierID    string            `json:"supplier_id" db:"supplier_id"`
+	PurchasedBy   string            `json:"purchased_by" db:"purchased_by"`
+	TotalCost     float64           `json:"total_cost" db:"total_cost"`
+	Description   string            `json:"description" db:"description"`
+	PaymentMethod string            `json:"payment_method" db:"payment_method"`
+	CreatedAt     string            `json:"created_at" db:"created_at"`
+	PurchaseItem  []PurchaseItemReq `json:"purchase_item" db:"purchase_item"`
+}
+
+type PurchaseItemResponse struct {
+	ID            string  `json:"id" db:"id"`
+	PurchaseID    string  `json:"purchase_id" db:"purchase_id"`
+	ProductID     string  `json:"product_id" db:"product_id"`
+	Quantity      int     `json:"quantity" db:"quantity"`
+	PurchasePrice float64 `json:"purchase_price" db:"purchase_price"`
+	TotalPrice    float64 `json:"total_price" db:"total_price"`
 }
 
 type PurchaseRequest struct {
-	ProductID     string  `json:"product_id"`
-	SalespersonID string  `json:"salesperson_id"`
-	Quantity      int     `json:"quantity"`
-	Price         float64 `json:"price"`
-	TotalPrice    float64 `json:"total_price"`
-	Description   string  `json:"description,omitempty"`
-	BoughtBy      string  `json:"bought_by"`
+	SupplierID    string            `json:"supplier_id" db:"supplier_id"`
+	PurchasedBy   string            `json:"purchased_by" db:"purchased_by"`
+	TotalCost     float64           `json:"total_cost" db:"total_cost"`
+	Description   string            `json:"description" db:"description"`
+	PaymentMethod string            `json:"payment_method" db:"payment_method"`
+	PurchaseItem  []PurchaseItemReq `json:"purchase_item" db:"purchase_item"`
+}
+
+type PurchaseItemReq struct {
+	PurchaseID    string  `json:"purchase_id" db:"purchase_id"`
+	ProductID     string  `json:"product_id" db:"product_id"`
+	Quantity      int     `json:"quantity" db:"quantity"`
+	PurchasePrice float64 `json:"purchase_price" db:"purchase_price"`
+	TotalPrice    float64 `json:"total_price" db:"total_price"`
+}
+
+type Purchase struct {
+	SupplierID    string            `json:"supplier_id" db:"supplier_id"`
+	PurchasedBy   string            `json:"purchased_by" db:"purchased_by"`
+	Description   string            `json:"description" db:"description"`
+	PaymentMethod string            `json:"payment_method" db:"payment_method"`
+	PurchaseItem  []PurchaseItemReq `json:"purchase_item" db:"purchase_item"`
+}
+
+type PurchaseItem struct {
+	ProductID     string  `json:"product_id" db:"product_id"`
+	Quantity      int     `json:"quantity" db:"quantity"`
+	PurchasePrice float64 `json:"purchase_price" db:"purchase_price"`
 }
 
 type PurchaseID struct {
@@ -111,25 +147,32 @@ type PurchaseID struct {
 }
 
 type FilterPurchase struct {
-	ProductID     string `json:"product_id" db:"product_id"`
-	SalespersonID string `json:"salesperson_id" db:"salesperson_id"`
-	BoughtBy      string `json:"bought_by" db:"bought_by"`
-	CreatedAt     string `json:"created_at" db:"created_at"`
+	ProductID   string `json:"product_id" db:"product_id"`
+	SupplierID  string `json:"salesperson_id" db:"salesperson_id"`
+	PurchasedBy string `json:"bought_by" db:"bought_by"`
+	CreatedAt   string `json:"created_at" db:"created_at"`
 }
 
 type PurchaseList struct {
-	Purchases []Purchase `json:"purchases"`
+	Purchases []PurchaseResponse `json:"purchases"`
 }
 
-// -----------Sales structs for repo -----------------------
+// --------------- Sales structs for repo -----------------------------------------------
 
 type SaleRequest struct {
-	Id             string      `json:"id" db:"id"`
 	ClientID       string      `json:"client_id" db:"client_id"`
 	SoldBy         string      `json:"sold_by" db:"sold_by"`
 	TotalSalePrice float64     `json:"total_sale_price" db:"total_sale_price"`
 	PaymentMethod  string      `json:"payment_method" db:"payment_method"`
 	SoldProducts   []SalesItem `json:"products" db:"products"`
+}
+
+type SalesItemReq struct {
+	SaleID     string  `json:"sale_id" db:"sale_id"`
+	ProductID  string  `json:"product_id" db:"product_id"`
+	Quantity   int     `json:"quantity" db:"quantity"`
+	SalePrice  float64 `json:"sale_price" db:"sale_price"`
+	TotalPrice float64 `json:"total_price" db:"total_price"`
 }
 
 type SaleResponse struct {
@@ -144,11 +187,17 @@ type SaleResponse struct {
 
 type SalesItem struct {
 	ID         string  `json:"id" db:"id"`
-	OrderId    string  `json:"order_id" db:"order_id"`
+	SaleID     string  `json:"sale_id" db:"sale_id"`
 	ProductID  string  `json:"product_id" db:"product_id"`
 	Quantity   int     `json:"quantity" db:"quantity"`
 	SalePrice  float64 `json:"sale_price" db:"sale_price"`
 	TotalPrice float64 `json:"total_price" db:"total_price"`
+}
+
+type SaleUpdate struct {
+	ID            string `json:"id" db:"id"`
+	ClientID      string `json:"client_id" db:"client_id"`
+	PaymentMethod string `json:"payment_method" db:"payment_method"`
 }
 
 type SaleList struct {
@@ -163,6 +212,7 @@ type SaleFilter struct {
 	StartDate string `json:"start_date" db:"start_date"`
 	EndDate   string `json:"end_date" db:"end_date"`
 	ClientID  string `json:"client_id" db:"client_id"`
+	SoldBy    string `json:"sold_by" db:"sold_by"`
 }
 
 // -------- User structs for Repo -----------------------------------------
