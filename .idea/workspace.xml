@@ -5,19 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c284e35d-56e9-4658-8681-1c369e9c68f2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/7e5ed22f-afb9-457e-b306-81e1a238c490.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/7e5ed22f-afb9-457e-b306-81e1a238c490.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/7e5ed22f-afb9-457e-b306-81e1a238c490/storage_v2/_src_/database/crm_admin.rolmxg/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/7e5ed22f-afb9-457e-b306-81e1a238c490/storage_v2/_src_/database/crm_admin.rolmxg/schema/public.abK9xQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/entity/entity.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/entity/entity.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/usecase/interfaces.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/usecase/interfaces.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/usecase/repo/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/usecase/repo/auth.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/usecase/repo/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/usecase/repo/product.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/usecase/repo/purchase.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/usecase/repo/purchase.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/usecase/repo/sale.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/usecase/repo/sale.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/000001_auth_service_table.down.sql" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/000001_auth_service_table.down.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/000001_auth_service_table.up.sql" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/000001_auth_service_table.up.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

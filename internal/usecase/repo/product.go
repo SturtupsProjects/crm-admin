@@ -12,8 +12,16 @@ type productRepo struct {
 	db *sqlx.DB
 }
 
+type productQuantity struct {
+	db *sqlx.DB
+}
+
 func NewProductRepo(db *sqlx.DB) usecase.ProductsRepo {
 	return &productRepo{db: db}
+}
+
+func NewProductQuantity(db *sqlx.DB) usecase.ProductQuantity {
+	return &productQuantity{db: db}
 }
 
 //---------------- Product Category CRUD -----------------------------------------------------------------------------
@@ -218,24 +226,47 @@ func (p *productRepo) GetProductList(in entity.FilterProduct) (entity.ProductLis
 
 // -------------------------------------------- Must fix end Do Reflect -------------------------------------
 
-func (p *productRepo) AddProduct(in entity.ProductNumber) (entity.Product, error) {
-	var product entity.Product
+func (p *productQuantity) AddProduct(in *entity.UpdateProductNumber) (*entity.ProductNumber, error) {
+	var product *entity.ProductNumber
 
 	query := `
 		UPDATE products
 		SET total_count = total_count + $1
 		WHERE id = $2
-		RETURNING id, category_id, name, bill_format, incoming_price, standard_price, total_count, created_at
+		RETURNING id, total_count
 	`
 	err := p.db.QueryRowx(query, in.Count, in.Id).
-		Scan(&product.ID, &product.CategoryID, &product.Name, &product.BillFormat, &product.IncomingPrice, &product.StandardPrice, &product.TotalCount, &product.CreatedAt)
+		Scan(&product.ID, &product.TotalCount)
 	if err != nil {
-		return entity.Product{}, fmt.Errorf("failed to add product stock: %w", err)
+		return nil, fmt.Errorf("failed to add product stock: %w", err)
 	}
 
 	return product, nil
 }
 
-func (p *productRepo) RemoveProduct(in entity.ProductNumber) (entity.Product, error) {
-	return entity.Product{}, nil
+func (p *productQuantity) RemoveProduct(in *entity.UpdateProductNumber) (*entity.ProductNumber, error) {
+	var res *entity.ProductNumber
+
+	query := `UPDATE products SET total_count = total_count - $1
+		RETURNING id, total_count`
+
+	err := p.db.Get(res, query, in)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (p *productQuantity) GetProductCount(in *entity.ProductID) (*entity.ProductNumber, error) {
+	var res *entity.ProductNumber
+
+	query := `SELECT id, total_count from products WHERE id = $1`
+
+	err := p.db.Get(res, query, in)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
 }

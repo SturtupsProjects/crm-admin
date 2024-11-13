@@ -23,9 +23,12 @@ type ProductsRepo interface {
 	DeleteProduct(in entity.ProductID) (entity.Message, error)
 	GetProduct(in entity.ProductID) (entity.Product, error)
 	GetProductList(in entity.FilterProduct) (entity.ProductList, error)
+}
 
-	AddProduct(in entity.ProductNumber) (entity.Product, error)
-	RemoveProduct(in entity.ProductNumber) (entity.Product, error)
+type ProductQuantity interface {
+	AddProduct(in *entity.UpdateProductNumber) (*entity.ProductNumber, error)
+	RemoveProduct(in *entity.UpdateProductNumber) (*entity.ProductNumber, error)
+	GetProductCount(in *entity.ProductID) (*entity.ProductNumber, error)
 }
 
 type PurchasesRepo interface {

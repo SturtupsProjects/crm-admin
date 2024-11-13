@@ -55,11 +55,6 @@ type ProductUpdate struct {
 	StandardPrice float32 `json:"standard_price" db:"standard_price"`
 }
 
-type ProductNumber struct {
-	Id    string `json:"id" db:"id"`
-	Count int    `json:"count" db:"count"`
-}
-
 type Product struct {
 	ID            string  `json:"id" db:"id"`
 	CategoryID    string  `json:"category_id" db:"category_id"`
@@ -74,6 +69,16 @@ type Product struct {
 
 type ProductList struct {
 	Products []Product `json:"products"`
+}
+
+type UpdateProductNumber struct {
+	Id    string `json:"id" db:"id"`
+	Count int    `json:"count" db:"count"`
+}
+
+type ProductNumber struct {
+	ID         string `json:"id" db:"id"`
+	TotalCount int    `json:"total_count" db:"total_count"`
 }
 
 // ---------------------------------- Message ---------------------------------------------
@@ -92,14 +97,14 @@ type PurchaseUpdate struct {
 }
 
 type PurchaseResponse struct {
-	ID            string            `json:"id" db:"id"`
-	SupplierID    string            `json:"supplier_id" db:"supplier_id"`
-	PurchasedBy   string            `json:"purchased_by" db:"purchased_by"`
-	TotalCost     float64           `json:"total_cost" db:"total_cost"`
-	Description   string            `json:"description" db:"description"`
-	PaymentMethod string            `json:"payment_method" db:"payment_method"`
-	CreatedAt     string            `json:"created_at" db:"created_at"`
-	PurchaseItem  []PurchaseItemReq `json:"purchase_item" db:"purchase_item"`
+	ID            string             `json:"id" db:"id"`
+	SupplierID    string             `json:"supplier_id" db:"supplier_id"`
+	PurchasedBy   string             `json:"purchased_by" db:"purchased_by"`
+	TotalCost     float64            `json:"total_cost" db:"total_cost"`
+	Description   string             `json:"description" db:"description"`
+	PaymentMethod string             `json:"payment_method" db:"payment_method"`
+	CreatedAt     string             `json:"created_at" db:"created_at"`
+	PurchaseItem  *[]PurchaseItemReq `json:"purchase_item" db:"purchase_item"`
 }
 
 type PurchaseItemResponse struct {
@@ -112,16 +117,15 @@ type PurchaseItemResponse struct {
 }
 
 type PurchaseRequest struct {
-	SupplierID    string            `json:"supplier_id" db:"supplier_id"`
-	PurchasedBy   string            `json:"purchased_by" db:"purchased_by"`
-	TotalCost     float64           `json:"total_cost" db:"total_cost"`
-	Description   string            `json:"description" db:"description"`
-	PaymentMethod string            `json:"payment_method" db:"payment_method"`
-	PurchaseItem  []PurchaseItemReq `json:"purchase_item" db:"purchase_item"`
+	SupplierID    string             `json:"supplier_id" db:"supplier_id"`
+	PurchasedBy   string             `json:"purchased_by" db:"purchased_by"`
+	TotalCost     float64            `json:"total_cost" db:"total_cost"`
+	Description   string             `json:"description" db:"description"`
+	PaymentMethod string             `json:"payment_method" db:"payment_method"`
+	PurchaseItem  *[]PurchaseItemReq `json:"purchase_item" db:"purchase_item"`
 }
 
 type PurchaseItemReq struct {
-	PurchaseID    string  `json:"purchase_id" db:"purchase_id"`
 	ProductID     string  `json:"product_id" db:"product_id"`
 	Quantity      int     `json:"quantity" db:"quantity"`
 	PurchasePrice float64 `json:"purchase_price" db:"purchase_price"`
@@ -129,11 +133,11 @@ type PurchaseItemReq struct {
 }
 
 type Purchase struct {
-	SupplierID    string            `json:"supplier_id" db:"supplier_id"`
-	PurchasedBy   string            `json:"purchased_by" db:"purchased_by"`
-	Description   string            `json:"description" db:"description"`
-	PaymentMethod string            `json:"payment_method" db:"payment_method"`
-	PurchaseItem  []PurchaseItemReq `json:"purchase_item" db:"purchase_item"`
+	SupplierID    string          `json:"supplier_id" db:"supplier_id"`
+	PurchasedBy   string          `json:"purchased_by" db:"purchased_by"`
+	Description   string          `json:"description" db:"description"`
+	PaymentMethod string          `json:"payment_method" db:"payment_method"`
+	PurchaseItem  *[]PurchaseItem `json:"purchase_item" db:"purchase_item"`
 }
 
 type PurchaseItem struct {
@@ -154,7 +158,7 @@ type FilterPurchase struct {
 }
 
 type PurchaseList struct {
-	Purchases []PurchaseResponse `json:"purchases"`
+	Purchases *[]PurchaseResponse `json:"purchases"`
 }
 
 // --------------- Sales structs for repo -----------------------------------------------
