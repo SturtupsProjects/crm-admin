@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c284e35d-56e9-4658-8681-1c369e9c68f2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/entity/entity.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/entity/entity.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/usecase/repo/sale.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/usecase/repo/sale.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,10 +21,22 @@
       </list>
     </option>
   </component>
-  <component name="GOROOT" url="file:///usr/lib/go-1.23" />
+  <component name="GOROOT" url="file://$USER_HOME$/golang/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.2.linux-amd64" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "BEKJONS"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "git@github.com:SturtupsProjects/crm-admin.git",
+    "accountId": "378b73ff-c53b-4bdf-b281-4b6dbae126bd"
+  }
+}]]></component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file:///usr/lib/go-1.23/src/log/slog/logger.go" root0="SKIP_INSPECTION" />
   </component>
@@ -30,6 +44,9 @@
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="2oTQivadC0ta2rkPvBgFAIvwPdx" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -41,13 +58,15 @@
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "com.codeium.enabled": "true",
     "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "/home/fazliddin/go/go11/Fazliddin/projects/manage-app/auth_service",
+    "last_opened_file_path": "/home/jons/go/src/github.com/Work/start-up/crm-admin/crm-admin",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm"
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
