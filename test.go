@@ -1,1 +1,13 @@
 package main
+
+//DB_NAME = crm_admin
+//DB_USER = postgres
+//DB_PASS = 123321
+//DB_HOST = postgres
+//DB_PORT = 5432
+//
+//ACCESS_TOKEN = asdnlk
+//REFRESH_TOKEN = asdkad
+//EXPIRED_ACCESS = 12
+//EXPIRED_REFRESH = 24
+//RUN_PORT = :9090

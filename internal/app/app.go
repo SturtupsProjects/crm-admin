@@ -2,9 +2,8 @@ package app
 
 import (
 	"crm-admin/config"
+	"crm-admin/internal/controller"
 	"crm-admin/internal/controller/http"
-	"crm-admin/internal/usecase"
-	"crm-admin/internal/usecase/repo"
 	"crm-admin/internal/usecase/token"
 	"crm-admin/pkg/logger"
 	"crm-admin/pkg/postgres"
@@ -13,6 +12,7 @@ import (
 )
 
 func Run(cfg config.Config) {
+
 	logger1 := logger.NewLogger()
 
 	db, err := postgres.Connection(cfg)
@@ -25,12 +25,10 @@ func Run(cfg config.Config) {
 		log.Fatal(err)
 	}
 
-	userRepo := repo.NewUserRepo(db)
-	userUseCase := usecase.NewUserUseCase(userRepo, logger1)
+	controller1 := controller.NewController(db, logger1)
 
 	engine := gin.Default()
-
-	http.NewRouter(engine, logger1, userUseCase)
+	http.NewRouter(engine, logger1, controller1)
 
 	log.Fatal(engine.Run(cfg.RUN_PORT))
 }

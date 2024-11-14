@@ -13,16 +13,16 @@ type UsersRepo interface {
 }
 
 type ProductsRepo interface {
-	CreateProductCategory(in entity.CategoryName) (entity.Category, error)
-	DeleteProductCategory(in entity.CategoryID) (entity.Message, error)
-	GetProductCategory(in entity.CategoryID) (entity.Category, error)
-	GetListProductCategory(in entity.CategoryName) (entity.CategoryList, error)
+	CreateProductCategory(in *entity.CategoryName) (*entity.Category, error)
+	DeleteProductCategory(in *entity.CategoryID) (*entity.Message, error)
+	GetProductCategory(in *entity.CategoryID) (*entity.Category, error)
+	GetListProductCategory(in *entity.CategoryName) (*entity.CategoryList, error)
 
-	CreateProduct(in entity.ProductRequest) (entity.Product, error)
-	UpdateProduct(in entity.ProductUpdate) (entity.Product, error)
-	DeleteProduct(in entity.ProductID) (entity.Message, error)
-	GetProduct(in entity.ProductID) (entity.Product, error)
-	GetProductList(in entity.FilterProduct) (entity.ProductList, error)
+	CreateProduct(in *entity.ProductRequest) (*entity.Product, error)
+	UpdateProduct(in *entity.ProductUpdate) (*entity.Product, error)
+	DeleteProduct(in *entity.ProductID) (*entity.Message, error)
+	GetProduct(in *entity.ProductID) (*entity.Product, error)
+	GetProductList(in *entity.FilterProduct) (*entity.ProductList, error)
 }
 
 type ProductQuantity interface {
