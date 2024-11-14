@@ -71,7 +71,7 @@ type ProductList struct {
 	Products []Product `json:"products"`
 }
 
-type UpdateProductNumber struct {
+type CountProductReq struct {
 	Id    string `json:"id" db:"id"`
 	Count int    `json:"count" db:"count"`
 }
@@ -164,6 +164,20 @@ type PurchaseList struct {
 // --------------- Sales structs for repo -----------------------------------------------
 
 type SaleRequest struct {
+	ClientID      string      `json:"client_id" db:"client_id"`
+	SoldBy        string      `json:"sold_by" db:"sold_by"`
+	PaymentMethod string      `json:"payment_method" db:"payment_method"`
+	SoldProducts  []SalesItem `json:"products" db:"products"`
+}
+
+type SalesItemRequest struct {
+	SaleID    string  `json:"sale_id" db:"sale_id"`
+	ProductID string  `json:"product_id" db:"product_id"`
+	Quantity  int     `json:"quantity" db:"quantity"`
+	SalePrice float64 `json:"sale_price" db:"sale_price"`
+}
+
+type SalesTotal struct {
 	ClientID       string      `json:"client_id" db:"client_id"`
 	SoldBy         string      `json:"sold_by" db:"sold_by"`
 	TotalSalePrice float64     `json:"total_sale_price" db:"total_sale_price"`
@@ -171,7 +185,7 @@ type SaleRequest struct {
 	SoldProducts   []SalesItem `json:"products" db:"products"`
 }
 
-type SalesItemReq struct {
+type SalesItemTotal struct {
 	SaleID     string  `json:"sale_id" db:"sale_id"`
 	ProductID  string  `json:"product_id" db:"product_id"`
 	Quantity   int     `json:"quantity" db:"quantity"`

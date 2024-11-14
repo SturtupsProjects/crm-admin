@@ -8,7 +8,10 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/entity/entity.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/entity/entity.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/usecase/interfaces.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/usecase/interfaces.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/usecase/purchase.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/usecase/purchase.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/usecase/repo/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/usecase/repo/product.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/usecase/repo/purchase.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/usecase/repo/purchase.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/usecase/repo/sale.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/usecase/repo/sale.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -26,9 +26,10 @@ type ProductsRepo interface {
 }
 
 type ProductQuantity interface {
-	AddProduct(in *entity.UpdateProductNumber) (*entity.ProductNumber, error)
-	RemoveProduct(in *entity.UpdateProductNumber) (*entity.ProductNumber, error)
+	AddProduct(in *entity.CountProductReq) (*entity.ProductNumber, error)
+	RemoveProduct(in *entity.CountProductReq) (*entity.ProductNumber, error)
 	GetProductCount(in *entity.ProductID) (*entity.ProductNumber, error)
+	ProductCountChecker(in *entity.CountProductReq) (bool, error)
 }
 
 type PurchasesRepo interface {
@@ -40,7 +41,7 @@ type PurchasesRepo interface {
 }
 
 type SalesRepo interface {
-	CreateSale(in *entity.SaleRequest) (*entity.SaleResponse, error)
+	CreateSale(in *entity.SalesTotal) (*entity.SaleResponse, error)
 	UpdateSale(in *entity.SaleUpdate) (*entity.SaleResponse, error)
 	GetSale(in *entity.SaleID) (*entity.SaleResponse, error)
 	GetSaleList(filter *entity.SaleFilter) (*entity.SaleList, error)

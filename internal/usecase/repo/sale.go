@@ -17,7 +17,7 @@ func NewSalesRepo(db *sqlx.DB) usecase.SalesRepo {
 	return &salesRepoImpl{db: db}
 }
 
-func (r *salesRepoImpl) CreateSale(in *entity.SaleRequest) (*entity.SaleResponse, error) {
+func (r *salesRepoImpl) CreateSale(in *entity.SalesTotal) (*entity.SaleResponse, error) {
 	sale := &entity.SaleResponse{}
 
 	query := `INSERT INTO sales (client_id, sold_by, total_sale_price, payment_method)

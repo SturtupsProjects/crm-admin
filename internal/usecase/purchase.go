@@ -2,7 +2,9 @@ package usecase
 
 import (
 	"crm-admin/internal/entity"
+	"fmt"
 	"log/slog"
+	"sync"
 )
 
 type PurchaseUseCase struct {
@@ -20,26 +22,24 @@ func NewPurchaseUseCase(repo PurchasesRepo, pr ProductQuantity, log *slog.Logger
 }
 
 func (p *PurchaseUseCase) CalculateTotalPurchases(in *entity.Purchase) (*entity.PurchaseRequest, error) {
-	var result *entity.PurchaseRequest
+	var result entity.PurchaseRequest
 	var totalSum float64
-
 	var purchaseList []entity.PurchaseItemReq
-	var purchase entity.PurchaseItemReq
 
 	for _, pr := range *in.PurchaseItem {
 		if pr.Quantity == 0 {
 			continue
 		}
 
-		sum := float64(pr.Quantity) * pr.PurchasePrice
-
-		purchase.PurchasePrice = pr.PurchasePrice
-		purchase.ProductID = pr.ProductID
-		purchase.Quantity = pr.Quantity
-		purchase.TotalPrice = sum
+		purchase := entity.PurchaseItemReq{
+			PurchasePrice: pr.PurchasePrice,
+			ProductID:     pr.ProductID,
+			Quantity:      pr.Quantity,
+			TotalPrice:    float64(pr.Quantity) * pr.PurchasePrice,
+		}
 
 		purchaseList = append(purchaseList, purchase)
-		totalSum += sum
+		totalSum += purchase.TotalPrice
 	}
 
 	result.PurchasedBy = in.PurchasedBy
@@ -49,35 +49,134 @@ func (p *PurchaseUseCase) CalculateTotalPurchases(in *entity.Purchase) (*entity.
 	result.PaymentMethod = in.PaymentMethod
 	result.Description = in.Description
 
-	return result, nil
+	return &result, nil
 }
 
 func (p *PurchaseUseCase) CreatePurchase(in *entity.Purchase) (*entity.PurchaseResponse, error) {
-
 	req, err := p.CalculateTotalPurchases(in)
 	if err != nil {
-		p.log.Error("Error in calculating", "error", err.Error())
-		return nil, err
+		p.log.Error("Error calculating total purchase cost", "error", err.Error())
+		return nil, fmt.Errorf("error calculating total purchase cost: %w", err)
 	}
 
 	res, err := p.repo.CreatePurchase(req)
 	if err != nil {
-		p.log.Error("Error in creating purchase", "error", err.Error())
-		return nil, err
+		p.log.Error("Error creating purchase", "error", err.Error())
+		return nil, fmt.Errorf("error creating purchase: %w", err)
 	}
 
-	// You can use THE goroutines ----------------------------
+	var wg sync.WaitGroup
+	semaphore := make(chan struct{}, 10) // limit to 10 goroutines
+
 	for _, item := range *res.PurchaseItem {
-		productQuantityReq := &entity.UpdateProductNumber{
+		wg.Add(1)
+		go func(item entity.PurchaseItemReq) {
+			defer wg.Done()
+			semaphore <- struct{}{}
+			defer func() { <-semaphore }()
+
+			productQuantityReq := &entity.CountProductReq{
+				Id:    item.ProductID,
+				Count: item.Quantity,
+			}
+			if _, err := p.product.AddProduct(productQuantityReq); err != nil {
+				p.log.Error("Error adding product quantity", "error", err.Error())
+			}
+		}(item)
+	}
+
+	wg.Wait()
+	return res, nil
+}
+
+func (p *PurchaseUseCase) UpdatePurchase(in *entity.PurchaseUpdate) (*entity.PurchaseResponse, error) {
+	res, err := p.repo.UpdatePurchase(in)
+	if err != nil {
+		p.log.Error("Error updating purchase", "error", err.Error())
+		return nil, fmt.Errorf("error updating purchase: %w", err)
+	}
+
+	return res, nil
+}
+
+func (p *PurchaseUseCase) GetPurchase(req *entity.PurchaseID) (*entity.PurchaseResponse, error) {
+	res, err := p.repo.GetPurchase(req)
+	if err != nil {
+		p.log.Error("Error fetching purchase data", "error", err.Error())
+		return nil, fmt.Errorf("error fetching purchase data: %w", err)
+	}
+
+	return res, nil
+}
+
+func (p *PurchaseUseCase) GetListPurchase(req *entity.FilterPurchase) (*entity.PurchaseList, error) {
+	res, err := p.repo.GetPurchaseList(req)
+	if err != nil {
+		p.log.Error("Error fetching purchase list", "error", err.Error())
+		return nil, fmt.Errorf("error fetching purchase list: %w", err)
+	}
+
+	return res, nil
+}
+
+func (p *PurchaseUseCase) validatePurchaseItems(purchase *entity.PurchaseResponse) error {
+	for _, item := range *purchase.PurchaseItem {
+		if item.Quantity == 0 {
+			item.Quantity = 1
+		}
+
+		productQuantityReq := &entity.CountProductReq{
 			Id:    item.ProductID,
 			Count: item.Quantity,
 		}
-		_, err := p.product.AddProduct(productQuantityReq)
+
+		check, err := p.product.ProductCountChecker(productQuantityReq)
 		if err != nil {
-			p.log.Error("Error in adding product", "error", err.Error())
-			return nil, err
+			p.log.Error("Error checking product quantity", "error", err.Error())
+			return fmt.Errorf("error checking product quantity: %w", err)
+		}
+
+		if !check {
+			return fmt.Errorf("insufficient product quantity to proceed with deletion")
 		}
 	}
+	return nil
+}
+
+func (p *PurchaseUseCase) DeletePurchase(req *entity.PurchaseID) (*entity.Message, error) {
+	purchase, err := p.repo.GetPurchase(req)
+	if err != nil {
+		p.log.Error("Error fetching purchase data", "error", err.Error())
+		return nil, fmt.Errorf("error fetching purchase data: %w", err)
+	}
+
+	if err := p.validatePurchaseItems(purchase); err != nil {
+		p.log.Error("Purchase validation failed before deletion", "error", err.Error())
+		return nil, err
+	}
+
+	res, err := p.repo.DeletePurchase(req)
+	if err != nil {
+		p.log.Error("Error deleting purchase", "error", err.Error())
+		return nil, fmt.Errorf("error deleting purchase: %w", err)
+	}
+
+	go func() {
+		for _, item := range *purchase.PurchaseItem {
+			if item.Quantity == 0 {
+				item.Quantity = 1
+			}
+
+			productQuantityReq := &entity.CountProductReq{
+				Id:    item.ProductID,
+				Count: item.Quantity,
+			}
+
+			if _, err := p.product.RemoveProduct(productQuantityReq); err != nil {
+				p.log.Error("Error removing product in DeletePurchase", "error", err.Error())
+			}
+		}
+	}()
 
 	return res, nil
 }

@@ -27,11 +27,10 @@ func (r *purchasesRepoImpl) CreatePurchase(in *entity.PurchaseRequest) (*entity.
 		return nil, err
 	}
 
-	for _, item := range in.PurchaseItem {
-		item.PurchaseID = purchase.ID
+	for _, item := range *in.PurchaseItem {
 		itemQuery := `INSERT INTO purchase_items (purchase_id, product_id, quantity, purchase_price, total_price)
-		              VALUES (:purchase_id, :product_id, :quantity, :purchase_price, :total_price)`
-		_, err := r.db.NamedExec(itemQuery, item)
+		              VALUES ($1, $2, $3, $4, $5)`
+		_, err := r.db.Exec(itemQuery, purchase.ID, item.ProductID, item.Quantity, item.PurchasePrice, item.TotalPrice)
 		if err != nil {
 			return nil, err
 		}
@@ -144,7 +143,7 @@ func (r *purchasesRepoImpl) GetPurchaseList(in *entity.FilterPurchase) (*entity.
 		return nil, fmt.Errorf("failed to list purchases: %w", err)
 	}
 
-	return &entity.PurchaseList{Purchases: purchases}, nil
+	return &entity.PurchaseList{Purchases: &purchases}, nil
 }
 
 func (r *purchasesRepoImpl) DeletePurchase(in *entity.PurchaseID) (*entity.Message, error) {

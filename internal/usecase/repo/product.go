@@ -226,7 +226,7 @@ func (p *productRepo) GetProductList(in entity.FilterProduct) (entity.ProductLis
 
 // -------------------------------------------- Must fix end Do Reflect -------------------------------------
 
-func (p *productQuantity) AddProduct(in *entity.UpdateProductNumber) (*entity.ProductNumber, error) {
+func (p *productQuantity) AddProduct(in *entity.CountProductReq) (*entity.ProductNumber, error) {
 	var product *entity.ProductNumber
 
 	query := `
@@ -236,7 +236,7 @@ func (p *productQuantity) AddProduct(in *entity.UpdateProductNumber) (*entity.Pr
 		RETURNING id, total_count
 	`
 	err := p.db.QueryRowx(query, in.Count, in.Id).
-		Scan(&product.ID, &product.TotalCount)
+		Scan(product.ID, &product.TotalCount)
 	if err != nil {
 		return nil, fmt.Errorf("failed to add product stock: %w", err)
 	}
@@ -244,7 +244,7 @@ func (p *productQuantity) AddProduct(in *entity.UpdateProductNumber) (*entity.Pr
 	return product, nil
 }
 
-func (p *productQuantity) RemoveProduct(in *entity.UpdateProductNumber) (*entity.ProductNumber, error) {
+func (p *productQuantity) RemoveProduct(in *entity.CountProductReq) (*entity.ProductNumber, error) {
 	var res *entity.ProductNumber
 
 	query := `UPDATE products SET total_count = total_count - $1
@@ -266,6 +266,19 @@ func (p *productQuantity) GetProductCount(in *entity.ProductID) (*entity.Product
 	err := p.db.Get(res, query, in)
 	if err != nil {
 		return nil, err
+	}
+
+	return res, nil
+}
+
+func (p *productQuantity) ProductCountChecker(in *entity.CountProductReq) (bool, error) {
+	var res bool
+
+	query := `select 'true' from products where id = $1 and total_count >= $2`
+
+	err := p.db.Get(&res, query, in.Id, in.Count)
+	if err != nil {
+		return false, err
 	}
 
 	return res, nil
