@@ -8,15 +8,15 @@ import (
 	"strings"
 )
 
-type UserRepo struct {
+type userRepo struct {
 	db *sqlx.DB
 }
 
 func NewUserRepo(db *sqlx.DB) usecase.UsersRepo {
-	return &UserRepo{db: db}
+	return &userRepo{db: db}
 }
 
-func (u *UserRepo) AddAdmin(in entity.AdminPass) (entity.Message, error) {
+func (u *userRepo) AddAdmin(in entity.AdminPass) (entity.Message, error) {
 	res := entity.Message{}
 
 	_, err := u.db.Exec(`insert into users(first_name, last_name, email, phone_number, password, role)
@@ -30,7 +30,7 @@ values ($1, $2, $3, $4, $5, $6)`, "admin", "admin", "admin", in.Login, in.Passwo
 	return res, nil
 }
 
-func (u *UserRepo) CreateUser(in entity.User) (entity.UserRequest, error) {
+func (u *userRepo) CreateUser(in entity.User) (entity.UserRequest, error) {
 	var user entity.UserRequest
 	query := `
 		INSERT INTO users (first_name, last_name, email, phone_number, password, role)
@@ -46,7 +46,7 @@ func (u *UserRepo) CreateUser(in entity.User) (entity.UserRequest, error) {
 }
 
 // GetUser retrieves a user by their ID.
-func (u *UserRepo) GetUser(in entity.UserID) (entity.UserRequest, error) {
+func (u *userRepo) GetUser(in entity.UserID) (entity.UserRequest, error) {
 	var user entity.UserRequest
 	query := `SELECT user_id, first_name, last_name, email, phone_number, role, created_at FROM users WHERE user_id = $1`
 	err := u.db.Get(&user, query, in.ID)
@@ -56,7 +56,7 @@ func (u *UserRepo) GetUser(in entity.UserID) (entity.UserRequest, error) {
 	return user, nil
 }
 
-func (u *UserRepo) GetListUser(in entity.FilterUser) (entity.UserList, error) {
+func (u *userRepo) GetListUser(in entity.FilterUser) (entity.UserList, error) {
 	var users []entity.UserRequest
 	var queryBuilder strings.Builder
 	var args []interface{}
@@ -99,7 +99,7 @@ func (u *UserRepo) GetListUser(in entity.FilterUser) (entity.UserList, error) {
 }
 
 // DeleteUser removes a user by their ID.
-func (u *UserRepo) DeleteUser(in entity.UserID) (entity.Message, error) {
+func (u *userRepo) DeleteUser(in entity.UserID) (entity.Message, error) {
 	query := `DELETE FROM users WHERE user_id = $1`
 	res, err := u.db.Exec(query, in.ID)
 	if err != nil {
@@ -110,7 +110,7 @@ func (u *UserRepo) DeleteUser(in entity.UserID) (entity.Message, error) {
 }
 
 // UpdateUser modifies the fields of a user based on the fields provided in UserRequest.
-func (u *UserRepo) UpdateUser(in entity.UserRequest) (entity.UserRequest, error) {
+func (u *userRepo) UpdateUser(in entity.UserRequest) (entity.UserRequest, error) {
 	var user entity.UserRequest
 	query := `UPDATE users SET `
 	var args []interface{}
@@ -156,7 +156,7 @@ func (u *UserRepo) UpdateUser(in entity.UserRequest) (entity.UserRequest, error)
 	return user, nil
 }
 
-func (u *UserRepo) LogIn(in entity.PhoneNumber) (entity.LogInReq, error) {
+func (u *userRepo) LogIn(in entity.PhoneNumber) (entity.LogInReq, error) {
 	res := entity.LogInReq{}
 
 	err := u.db.Get(&res, `select user_id, first_name, phone_number, role from users

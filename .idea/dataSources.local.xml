@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal" created-in="GO-243.21565.208">
-    <data-source name="crm_admin@localhost" uuid="7e5ed22f-afb9-457e-b306-81e1a238c490">
+  <component name="dataSourceStorageLocal" created-in="GO-242.23339.24">
+    <data-source name="crm_admin@localhost" uuid="4a8fb0e5-7f8f-4f57-b712-88a1c119896f">
       <database-info product="PostgreSQL" version="14.13 (Ubuntu 14.13-0ubuntu0.22.04.1)" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.6.0" dbms="POSTGRES" exact-version="14.13" exact-driver-version="42.6">
         <identifier-quote-string>&quot;</identifier-quote-string>
       </database-info>

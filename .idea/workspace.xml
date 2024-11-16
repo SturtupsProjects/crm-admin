@@ -5,7 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c284e35d-56e9-4658-8681-1c369e9c68f2" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/app.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docs.go" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docs.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/swagger.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/swagger.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/swagger.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docs/swagger.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/app.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/app.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/controller/http/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/controller/http/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/controller/http/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/controller/http/router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/usecase/interfaces.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/usecase/interfaces.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/usecase/products.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/usecase/products.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/usecase/repo/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/usecase/repo/product.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.go" beforeDir="false" afterPath="$PROJECT_DIR$/test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +65,6 @@
   "keyToString": {
     "DefaultGoTemplateProperty": "Go File",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
@@ -61,7 +72,7 @@
     "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "/home/jons/go/src/github.com/Work/start-up/crm-admin/crm-admin",
+    "last_opened_file_path": "/home/fazliddin/go/go11/Fazliddin/projects/CRM-Admin/crm-admin/internal/controller",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -74,6 +85,9 @@
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/internal/controller" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/internal/usecase" />
     </key>
@@ -81,8 +95,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-gosdk-d297c17c1fbd-b87a2f8923ed-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-243.21565.208" />
-        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-GO-243.21565.208" />
+        <option value="bundled-gosdk-5df93f7ad4aa-df9ad98b711f-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-242.23339.24" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-GO-242.23339.24" />
       </set>
     </attachedChunks>
   </component>

@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS purchase_items;
+DROP TABLE IF EXISTS purchases;
 DROP TABLE IF EXISTS debt_payments;
 DROP TABLE IF EXISTS debts;
 DROP TABLE IF EXISTS cash_flow;

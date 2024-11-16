@@ -19,13 +19,13 @@ func newUserRoutes(router *gin.RouterGroup, us *usecase.UserUseCase, log *slog.L
 
 	auth := authRoutes{us, log}
 
-	router.POST("/admin/register", auth.RegisterAdmin)
-	router.POST("/user/register", auth.CreateUser)
-	router.POST("/login", auth.Login)
-	router.GET("/user/get/:id", auth.GetUser)
-	router.GET("/user/list", auth.ListUser)
-	router.PUT("/user/update/:id", auth.UpdateUser)
-	router.DELETE("/user/delete/:id", auth.DeleteUser)
+	router.POST("/admin/register", auth.registerAdmin)
+	router.POST("/user/register", auth.createUser)
+	router.POST("/login", auth.login)
+	router.GET("/get/:id", auth.getUser)
+	router.GET("/list", auth.listUser)
+	router.PUT("/update/:id", auth.updateUser)
+	router.DELETE("/delete/:id", auth.deleteUser)
 }
 
 // ------------ Handler methods --------------------------------------------------------
@@ -41,7 +41,7 @@ func newUserRoutes(router *gin.RouterGroup, us *usecase.UserUseCase, log *slog.L
 // @Failure 400 {object} entity.Error
 // @Failure 500 {object} entity.Error
 // @Router /auth/admin/register [post]
-func (a *authRoutes) RegisterAdmin(c *gin.Context) {
+func (a *authRoutes) registerAdmin(c *gin.Context) {
 	var req entity.AdminPass
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -63,6 +63,7 @@ func (a *authRoutes) RegisterAdmin(c *gin.Context) {
 // Login godoc
 // @Summary Admin Login
 // @Description Login for admin users
+// @Tags User
 // @Accept json
 // @Produce json
 // @Param Login body entity.LogIn true "Admin login"
@@ -70,7 +71,7 @@ func (a *authRoutes) RegisterAdmin(c *gin.Context) {
 // @Failure 400 {object} entity.Error
 // @Failure 500 {object} entity.Error
 // @Router /auth/login [post]
-func (a *authRoutes) Login(c *gin.Context) {
+func (a *authRoutes) login(c *gin.Context) {
 	var req entity.LogIn
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -100,7 +101,7 @@ func (a *authRoutes) Login(c *gin.Context) {
 // @Failure 400 {object} entity.Error
 // @Failure 500 {object} entity.Error
 // @Router /auth/user/register [post]
-func (a *authRoutes) CreateUser(c *gin.Context) {
+func (a *authRoutes) createUser(c *gin.Context) {
 	var req entity.User
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -130,8 +131,8 @@ func (a *authRoutes) CreateUser(c *gin.Context) {
 // @Success 200 {object} entity.UserRequest
 // @Failure 400 {object} entity.Error
 // @Failure 500 {object} entity.Error
-// @Router /auth/user/update/{id} [put]
-func (a *authRoutes) UpdateUser(c *gin.Context) {
+// @Router /auth/update/{id} [put]
+func (a *authRoutes) updateUser(c *gin.Context) {
 	var req entity.UserRequest
 	var user entity.UserUpdate
 
@@ -168,8 +169,8 @@ func (a *authRoutes) UpdateUser(c *gin.Context) {
 // @Success 200 {object} entity.Message
 // @Failure 400 {object} entity.Error
 // @Failure 500 {object} entity.Error
-// @Router /auth/user/delete/{id} [delete]
-func (a *authRoutes) DeleteUser(c *gin.Context) {
+// @Router /auth/delete/{id} [delete]
+func (a *authRoutes) deleteUser(c *gin.Context) {
 	var req entity.UserID
 
 	id := c.Param("id")
@@ -196,8 +197,8 @@ func (a *authRoutes) DeleteUser(c *gin.Context) {
 // @Success 200 {object} entity.UserRequest
 // @Failure 400 {object} entity.Error
 // @Failure 500 {object} entity.Error
-// @Router /auth/user/get/{id} [get]
-func (a *authRoutes) GetUser(c *gin.Context) {
+// @Router /auth/get/{id} [get]
+func (a *authRoutes) getUser(c *gin.Context) {
 	var req entity.UserID
 
 	id := c.Param("id")
@@ -224,8 +225,8 @@ func (a *authRoutes) GetUser(c *gin.Context) {
 // @Success 200 {array} entity.UserList
 // @Failure 400 {object} entity.Error
 // @Failure 500 {object} entity.Error
-// @Router /auth/user/list [get]
-func (a *authRoutes) ListUser(c *gin.Context) {
+// @Router /auth/list [get]
+func (a *authRoutes) listUser(c *gin.Context) {
 	var req entity.FilterUser
 
 	if err := c.ShouldBindQuery(&req); err != nil {

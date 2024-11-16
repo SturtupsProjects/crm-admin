@@ -50,50 +50,7 @@
                 }
             }
         },
-        "/auth/login": {
-            "post": {
-                "description": "Login for admin users",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Admin Login",
-                "parameters": [
-                    {
-                        "description": "Admin login",
-                        "name": "Login",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/entity.LogIn"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/entity.Token"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/entity.Error"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/entity.Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/user/delete/{id}": {
+        "/auth/delete/{id}": {
             "delete": {
                 "description": "Delete a user account",
                 "consumes": [
@@ -137,7 +94,7 @@
                 }
             }
         },
-        "/auth/user/get/{id}": {
+        "/auth/get/{id}": {
             "get": {
                 "description": "Retrieve user details by ID",
                 "consumes": [
@@ -181,7 +138,7 @@
                 }
             }
         },
-        "/auth/user/list": {
+        "/auth/list": {
             "get": {
                 "description": "Retrieve a list of users with optional filters",
                 "consumes": [
@@ -219,6 +176,105 @@
                             "items": {
                                 "$ref": "#/definitions/entity.UserList"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "description": "Login for admin users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Admin Login",
+                "parameters": [
+                    {
+                        "description": "Admin login",
+                        "name": "Login",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.LogIn"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Token"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/update/{id}": {
+            "put": {
+                "description": "Update user details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update User",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update user",
+                        "name": "UpdateUser",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.UserUpdate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.UserRequest"
                         }
                     },
                     "400": {
@@ -282,9 +338,9 @@
                 }
             }
         },
-        "/auth/user/update/{id}": {
-            "put": {
-                "description": "Update user details",
+        "/products": {
+            "get": {
+                "description": "Retrieve a list of products with optional filters",
                 "consumes": [
                     "application/json"
                 ],
@@ -292,24 +348,338 @@
                     "application/json"
                 ],
                 "tags": [
-                    "User"
+                    "Product"
                 ],
-                "summary": "Update User",
+                "summary": "List Products",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "User ID",
+                        "name": "category_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "created_by",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "total_count",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entity.ProductList"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Create Product",
+                "parameters": [
+                    {
+                        "description": "Product data",
+                        "name": "Product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.ProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Product"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/category": {
+            "get": {
+                "description": "Retrieve a list of product categories",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "List Product Categories",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entity.CategoryList"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new product category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Create Product Category",
+                "parameters": [
+                    {
+                        "description": "Category data",
+                        "name": "Category",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.CategoryName"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Category"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/category/{id}": {
+            "get": {
+                "description": "Retrieve a product category by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Get Product Category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Category"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a product category by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Delete Product Category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Message"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}": {
+            "get": {
+                "description": "Retrieve a product by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Get Product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Product"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update product details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Update Product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Update user",
-                        "name": "UpdateUser",
+                        "description": "Updated product data",
+                        "name": "UpdateProduct",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.UserUpdate"
+                            "$ref": "#/definitions/entity.ProductUpdate"
                         }
                     }
                 ],
@@ -317,7 +687,531 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/entity.UserRequest"
+                            "$ref": "#/definitions/entity.Product"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a product by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Delete Product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Message"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/purchases": {
+            "get": {
+                "description": "Retrieve a list of purchases",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Purchase"
+                ],
+                "summary": "List Purchases",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "bought_by",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "created_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "product_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "salesperson_id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entity.PurchaseList"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new purchase",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Purchase"
+                ],
+                "summary": "Create Purchase",
+                "parameters": [
+                    {
+                        "description": "Purchase data",
+                        "name": "Purchase",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.Purchase"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/entity.PurchaseResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/purchases/{id}": {
+            "get": {
+                "description": "Retrieve a purchase by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Purchase"
+                ],
+                "summary": "Get Purchase",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Purchase ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.PurchaseResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update purchase details by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Purchase"
+                ],
+                "summary": "Update Purchase",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Purchase ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated purchase data",
+                        "name": "PurchaseUpdate",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.PurchaseUpdate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.PurchaseResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a purchase by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Purchase"
+                ],
+                "summary": "Delete Purchase",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Purchase ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Message"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/sales": {
+            "get": {
+                "description": "Retrieve a list of sales with optional filters",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Sales"
+                ],
+                "summary": "List Sales",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "client_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "end_date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sold_by",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "start_date",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entity.SaleList"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Record a new sale transaction",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Sales"
+                ],
+                "summary": "Create Sale",
+                "parameters": [
+                    {
+                        "description": "Sale data",
+                        "name": "SaleRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.SaleRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/entity.SaleResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/sales/{id}": {
+            "get": {
+                "description": "Retrieve a sale by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Sales"
+                ],
+                "summary": "Get Sale",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Sale ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.SaleResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update details of an existing sale",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Sales"
+                ],
+                "summary": "Update Sale",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Sale ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated sale data",
+                        "name": "SaleUpdate",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.SaleUpdate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.SaleResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a sale by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Sales"
+                ],
+                "summary": "Delete Sale",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Sale ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Message"
                         }
                     },
                     "400": {
@@ -348,6 +1242,45 @@
                 }
             }
         },
+        "entity.Category": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.CategoryList": {
+            "type": "object",
+            "properties": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.Category"
+                    }
+                }
+            }
+        },
+        "entity.CategoryName": {
+            "type": "object",
+            "properties": {
+                "created_by": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "entity.Error": {
             "type": "object",
             "properties": {
@@ -370,6 +1303,306 @@
             "properties": {
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "entity.Product": {
+            "type": "object",
+            "properties": {
+                "bill_format": {
+                    "type": "string"
+                },
+                "category_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "incoming_price": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "standard_price": {
+                    "type": "number"
+                },
+                "total_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "entity.ProductList": {
+            "type": "object",
+            "properties": {
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.Product"
+                    }
+                }
+            }
+        },
+        "entity.ProductRequest": {
+            "type": "object",
+            "properties": {
+                "bill_format": {
+                    "type": "string"
+                },
+                "category_id": {
+                    "type": "string"
+                },
+                "created_by": {
+                    "type": "string"
+                },
+                "incoming_price": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "standard_price": {
+                    "type": "number"
+                }
+            }
+        },
+        "entity.ProductUpdate": {
+            "type": "object",
+            "properties": {
+                "bill_format": {
+                    "type": "string"
+                },
+                "category_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "incoming_price": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "standard_price": {
+                    "type": "number"
+                }
+            }
+        },
+        "entity.Purchase": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "payment_method": {
+                    "type": "string"
+                },
+                "purchase_item": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.PurchaseItem"
+                    }
+                },
+                "purchased_by": {
+                    "type": "string"
+                },
+                "supplier_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.PurchaseItem": {
+            "type": "object",
+            "properties": {
+                "product_id": {
+                    "type": "string"
+                },
+                "purchase_price": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "entity.PurchaseItemReq": {
+            "type": "object",
+            "properties": {
+                "product_id": {
+                    "type": "string"
+                },
+                "purchase_price": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "total_price": {
+                    "type": "number"
+                }
+            }
+        },
+        "entity.PurchaseList": {
+            "type": "object",
+            "properties": {
+                "purchases": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.PurchaseResponse"
+                    }
+                }
+            }
+        },
+        "entity.PurchaseResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "payment_method": {
+                    "type": "string"
+                },
+                "purchase_item": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.PurchaseItemReq"
+                    }
+                },
+                "purchased_by": {
+                    "type": "string"
+                },
+                "supplier_id": {
+                    "type": "string"
+                },
+                "total_cost": {
+                    "type": "number"
+                }
+            }
+        },
+        "entity.PurchaseUpdate": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "payment_method": {
+                    "type": "string"
+                },
+                "supplier_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.SaleList": {
+            "type": "object",
+            "properties": {
+                "sales": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.SaleResponse"
+                    }
+                }
+            }
+        },
+        "entity.SaleRequest": {
+            "type": "object",
+            "properties": {
+                "client_id": {
+                    "type": "string"
+                },
+                "payment_method": {
+                    "type": "string"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.SalesItem"
+                    }
+                },
+                "sold_by": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.SaleResponse": {
+            "type": "object",
+            "properties": {
+                "client_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "payment_method": {
+                    "type": "string"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.SalesItem"
+                    }
+                },
+                "sold_by": {
+                    "type": "string"
+                },
+                "total_sale_price": {
+                    "type": "number"
+                }
+            }
+        },
+        "entity.SaleUpdate": {
+            "type": "object",
+            "properties": {
+                "client_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "payment_method": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.SalesItem": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "product_id": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "sale_id": {
+                    "type": "string"
+                },
+                "sale_price": {
+                    "type": "number"
+                },
+                "total_price": {
+                    "type": "number"
                 }
             }
         },
